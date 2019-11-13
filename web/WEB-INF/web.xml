@@ -8,6 +8,18 @@
         <servlet-name>RegistrarUsuario</servlet-name>
         <servlet-class>Servlet.RegistrarUsuario</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ActualizarUsuario</servlet-name>
+        <servlet-class>Servlet.ActualizarUsuario</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CargarLenguaje</servlet-name>
+        <servlet-class>Servlet.CargarLenguaje</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>IniciarProyecto</servlet-name>
+        <servlet-class>Servlet.IniciarProyecto</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IniciarSesion</servlet-name>
         <url-pattern>/iniciar</url-pattern>
@@ -15,6 +27,18 @@
     <servlet-mapping>
         <servlet-name>RegistrarUsuario</servlet-name>
         <url-pattern>/registrar-usuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActualizarUsuario</servlet-name>
+        <url-pattern>/actualizar-usuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CargarLenguaje</servlet-name>
+        <url-pattern>/cargar-lenguaje</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IniciarProyecto</servlet-name>
+        <url-pattern>/iniciar-proyecto</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

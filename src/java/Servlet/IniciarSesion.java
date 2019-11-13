@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,6 +40,8 @@ public class IniciarSesion extends HttpServlet {
 
             Consultas con = new Consultas();
             if(con.Autenticacion(userName, password)){
+                HttpSession objSession = request.getSession(true);
+                objSession.setAttribute("userName", userName);
                 response.sendRedirect("Vistas/dashboard.jsp");
             }
             else{
