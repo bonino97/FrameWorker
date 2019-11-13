@@ -79,8 +79,9 @@ public class Consultas extends Conexion{
         
         return false;
     }
-    public static void main(String[] args){
+    
+    /*public static void main(String[] args){
         Consultas co = new Consultas();
-        System.out.println(co.Registrar("test2","test2","test2","test2","test2@test2"));
-    }
+        System.out.println(co.Autenticacion("test233", "test2"));
+    }*/
 }

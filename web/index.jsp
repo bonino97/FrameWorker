@@ -22,24 +22,24 @@
           <div class="container">
            <h3>Iniciar Sesion</h3>
             <div class="row">   
-              <form action="" method="POST" class="col s12">
+              <form action="iniciar" method="post" class="col s12">
                 <div class="row">
                   <div class="input-field col s6">
                     <i class="material-icons prefix">account_circle</i>
-                    <input id="icon_prefix" type="text" class="validate">
+                    <input id="icon_prefix" type="text" class="validate" name="userName">
                     <label for="icon_prefix">Usuario</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s6">
                     <i class="material-icons prefix">https</i>
-                    <input id="icon_password" type="password" class="validate">
+                    <input id="icon_password" type="password" class="validate" name="password">
                     <label for="icon_password">Contraseña</label>
                   </div>
                 </div>
                 <div class="row">
                   <div class="input-field col s6">
-                    <a type="submit" class="waves-effect waves-light btn">Iniciar Sesion</a>
+                    <input type="submit" value="Iniciar Sesion" class="waves-effect waves-light btn"/>
                   </div>
                 </div>
                   </br> 
