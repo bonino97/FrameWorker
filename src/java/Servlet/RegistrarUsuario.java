@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author bonii
  */
-public class IniciarSesion extends HttpServlet {
+public class RegistrarUsuario extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -29,20 +29,23 @@ public class IniciarSesion extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-            response.setContentType("text/html;charset=UTF-8");
-            PrintWriter out = response.getWriter();
+        throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         
         try{
-            String userName = request.getParameter("userName");
+            String name = request.getParameter("name");
+            String surname = request.getParameter("surname");
+            String userName = request.getParameter("username");
             String password = request.getParameter("password");
-
+            String email = request.getParameter("email");
+            
             Consultas con = new Consultas();
-            if(con.Autenticacion(userName, password)){
-                response.sendRedirect("Vistas/dashboard.jsp");
+            if(con.Registrar(userName,password,name,surname,email)){
+                response.sendRedirect("index.jsp");
             }
             else{
-                response.sendRedirect("index.jsp");
+                response.sendRedirect("register.jsp");
             }
         }
         catch(Exception e){

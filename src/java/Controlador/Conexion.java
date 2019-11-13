@@ -14,12 +14,13 @@ import java.sql.SQLException;
  */
 public class Conexion {
     private String USERNAME = "root";
+    private String UNICODE = "useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
     private String PASSWORD = "root";
     private String HOST = "localhost";
     private String PORT = "3306";
     private String DATABASE = "frameworker";
     private String CLASSNAME = "com.mysql.jdbc.Driver";
-    private String URL = "jdbc:mysql://"+HOST+":"+PORT+"/"+DATABASE;
+    private String URL = "jdbc:mysql://"+HOST+":"+PORT+"/"+DATABASE+"?"+UNICODE;
     
     private Connection con;
     
@@ -35,12 +36,12 @@ public class Conexion {
             System.err.println("ERROR: "+e);
         }
     }
-
-    public static void main(String[] args){
-        Conexion con = new Conexion();
-    }
     
     public Connection getConexion(){
         return con;
+    }
+    
+    public static void main(String[] args){
+        Conexion con = new Conexion();
     }
 }

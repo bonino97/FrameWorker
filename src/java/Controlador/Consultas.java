@@ -20,9 +20,11 @@ public class Consultas extends Conexion{
         
         try{
             String consulta = "SELECT * FROM usuario WHERE username = ? AND password = ?";
+            
             pst = getConexion().prepareStatement(consulta);
             pst.setString(1, userName);
             pst.setString(2, password);
+            
             
             rs = pst.executeQuery(); // GUARDA EL RESULTADO DE LA CONSULTA.
             
@@ -80,8 +82,8 @@ public class Consultas extends Conexion{
         return false;
     }
     
-    /*public static void main(String[] args){
+    public static void main(String[] args){
         Consultas co = new Consultas();
         System.out.println(co.Autenticacion("test233", "test2"));
-    }*/
+    }
 }

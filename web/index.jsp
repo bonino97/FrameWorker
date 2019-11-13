@@ -44,7 +44,7 @@
                 </div>
                   </br> 
                 <div class="row">
-                  <p>No tienes una cuenta? &nbsp;&nbsp;<a href="register.jsp"><b>Registrate</b></a></p>
+                  <p>No tienes una cuenta? &nbsp;&nbsp;<a href="Vistas/register.jsp"><b>Registrate</b></a></p>
                 </div>
               </form>
             </div>
