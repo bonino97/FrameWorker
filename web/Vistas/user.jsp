@@ -5,13 +5,15 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@page import="Controlador.Consultas"%>
+<%@page import="Models.User"%>
 <%
     HttpSession objSession = request.getSession(false);
+    Consultas Con = new Consultas();
     String userName = (String)objSession.getAttribute("userName"); 
-    if(userName.equals("")){ //SI NO EXISTE LA SESION DEL USUARIO
-        response.sendRedirect("index.jsp");
-    }
+    String error = (String)objSession.getAttribute("error"); 
+    
+    User model = Con.GetUser(userName);
 %>
 
 <!DOCTYPE html>
@@ -131,7 +133,7 @@
                         <div class="form-group">
                           <label class="bmd-label-floating">Usuario</label>
                           <input value="<%= userName %>" name ="userName" type="text" class="form-control" disabled="true" style="color: gray">
-                          <textarea style="display: none" name="userName" class="form-control" rows="5"><%= userName %></textarea>
+                          <textarea style="display: none" name="userName" class="form-control" rows="5"><%= model.username %></textarea>
                         </div>
                       </div>
                     </div>
@@ -139,49 +141,49 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           <label class="bmd-label-floating">Nombre</label>
-                          <input name ="name" type="text" class="form-control">
+                          <input value="<%= model.name %>"  name="name" type="text" class="form-control">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
                           <label class="bmd-label-floating">Apellido</label>
-                          <input name ="surname" type="text" class="form-control">
+                          <input name="surname" value="<%= model.surname %>" type="text" class="form-control">
                         </div>
                       </div>
-                    </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="bmd-label-floating">Nueva Contraseña</label>
-                        <input name ="password" type="password" class="form-control">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                        <label class="bmd-label-floating">Email</label>
+                        <input name ="email" value="<%= model.email %>" type="email" class="form-control">
                       </div>
+                     </div>
                     </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label class="bmd-label-floating">Repetir Contraseña</label>
-                        <input name ="repeat-password" type="password" class="form-control">
-                      </div>
-                    </div>
-                  </div>
-                  </br>
-                    </br>
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
                           <label>Descripcion</label>
                           <div class="form-group">
-                              <textarea name="description" class="form-control" rows="5"></textarea>
+                              <textarea name="description" class="form-control" rows="5"><%= model.description %></textarea>
                           </div>
                         </div>
                       </div>
                     </div>
                     <input type="submit" class="btn btn-primary pull-right" value="Actualizar" href="./user.jsp"/>
-                    <div class="clearfix"></div>
                   </form>
+                    <form action="../delete-user" method="post">
+                      <input type="hidden" name="id" value="<%= model.id %>" />
+                      <input type="submit" class="btn btn-danger pull-left" value="Darme de Baja"/>
+                    </form>
+                  </div>
+                  <br>
+                  <% if(error != null && !error.isEmpty()) {%>
+                    <div class="alert alert-danger" role="alert">
+                       <%=error %>
+                    </div>
+                  <%}%> 
+                  </c:if>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>

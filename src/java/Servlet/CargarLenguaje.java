@@ -42,6 +42,7 @@ public class CargarLenguaje extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
+        //https://github.com/yotammadem/jsp-servlet-example/blob/master/src/main/java/com/yotam/UsersDB.java
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -5,8 +5,10 @@
  */
 package Controlador;
 
+import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -82,35 +84,20 @@ public class Consultas extends Conexion{
         return false;
     }
     
-    public boolean ActualizarUsuario(String userName, String password, String name, String surname, String description){
+    public boolean ActualizarUsuario(String userName, String email, String name, String surname, String description){
         PreparedStatement pst  = null;
         PreparedStatement pstUser  = null;
         ResultSet rs = null;
         
-        
-        try{
-            String idUsuario = null;
-            String queryUsuario = "SELECT id FROM usuario WHERE username = ?";
-            
-            
-            pstUser = getConexion().prepareStatement(queryUsuario);
-            pstUser.setString((1),userName);
-            
-            rs = pstUser.executeQuery();
-            
-            if(rs.absolute(1)){
-                idUsuario = rs.getString(1);
-            }
-            
-            
-            String query = "UPDATE usuario SET name = ? , surname = ? , password = ? ,  description = ? WHERE id = ?";
+        try{ 
+            String query = "UPDATE usuario SET name = ? , surname = ? , email = ? ,  description = ? WHERE username = ?";
             
             pst = getConexion().prepareStatement(query);
-            pst.setString((1), password);
-            pst.setString((2), name);
-            pst.setString((3), surname);
+            pst.setString((1), name);
+            pst.setString((2), surname);
+            pst.setString((3), email);
             pst.setString((4), description);
-            pst.setString((5), idUsuario);
+            pst.setString((5), userName);
             
             if(pst.executeUpdate() == 1){
                 return true;
@@ -132,6 +119,50 @@ public class Consultas extends Conexion{
         }
         
         return false;
+    }
+    
+    public User GetUser(String userName){
+        PreparedStatement pst  = null;
+        ResultSet rs = null;
+        User Response = null;
+        
+        try {
+            String query = "SELECT * FROM usuario where username = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setString((1), userName);
+            
+            rs = pst.executeQuery();
+            
+            Response = new User(rs);
+            
+            return Response;
+        }
+        catch(Exception e){
+            System.err.println("ERROR: "+e);
+        }
+        finally{
+            try{
+                if(getConexion() != null) getConexion().close();
+                if(pst != null) pst.close();
+                if(rs != null) rs.close();
+            }
+            catch(Exception e){
+                System.err.println("ERROR: "+e);    
+            }
+        }
+        
+        return null;
+    } 
+    
+    public void DeleteUser(int id) throws SQLException
+    {
+        String query = "DELETE FROM usuario WHERE id = ?";
+            
+        PreparedStatement pst = getConexion().prepareStatement(query);
+        pst.setInt((1), id);
+        
+        pst.executeUpdate();
     }
     
     public static void main(String[] args){

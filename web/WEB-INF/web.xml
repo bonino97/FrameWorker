@@ -20,6 +20,10 @@
         <servlet-name>IniciarProyecto</servlet-name>
         <servlet-class>Servlet.IniciarProyecto</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>Servlet.DeleteUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IniciarSesion</servlet-name>
         <url-pattern>/iniciar</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>IniciarProyecto</servlet-name>
         <url-pattern>/iniciar-proyecto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/delete-user</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

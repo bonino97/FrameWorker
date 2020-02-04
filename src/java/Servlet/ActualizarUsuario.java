@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -31,39 +32,19 @@ public class ActualizarUsuario extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         
         try{
+            HttpSession session = request.getSession(false);
             String userName = request.getParameter("userName");
             String name = request.getParameter("name");
             String surname = request.getParameter("surname");
-            String password = request.getParameter("password");
-            String rptPassword = request.getParameter("repeat-password");
+            String email = request.getParameter("email");
             String description = request.getParameter("description");
-            boolean flag = false;
             
-            if(password.equals(rptPassword)){
-                Consultas con = new Consultas();
-                if(con.ActualizarUsuario(userName,password,name,surname,description)){
-                    flag = true;
-                }
-                else{
-                    System.err.println("ERROR");
-                }
-            }
-            else{
-                    out.println("<script type=\"text/javascript\">");
-                    out.println("alert('Las contraseñas no coinciden.');");
-                    out.println("location='index.jsp';");
-                    out.println("</script>");
-                    flag = false;
-            }
-            if(flag){
-                response.sendRedirect("Vistas/user.jsp");
-            }
-            else{
-                response.sendRedirect("./index.jsp");
-            }
+            Consultas con = new Consultas();
+            con.ActualizarUsuario(userName,email,name,surname,description);
+            
+            response.sendRedirect("Vistas/user.jsp");
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);
