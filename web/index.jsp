@@ -4,7 +4,20 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error");     
+    
+    if(userSession != null)
+    {
+        response.sendRedirect("Vistas/dashboard.jsp");
+    }
+%>
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -44,7 +57,21 @@
                     <input  type="submit" value="Iniciar Sesion" class="waves-effect waves-light btn" id="btnIniciar"/>
                   </div>
                 </div>
-                  </br> 
+                <%
+                    objSession.removeAttribute("error");     
+                    if(error != null)  {
+                %> 
+                <div class="row">
+                    <div id="card-alert" class="card red col s6">
+                      <div class="card-content white-text">
+                        <p><%= error %></p>
+                      </div>
+                    </div>
+                </div>
+                <%
+                    }
+                %>
+                </br> 
                 <div class="row">
                   <p>No tienes una cuenta? &nbsp;&nbsp;<a href="Vistas/register.jsp"><b>Registrate</b></a></p>
                 </div>

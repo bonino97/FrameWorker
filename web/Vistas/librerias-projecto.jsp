@@ -114,7 +114,7 @@
                   <a class="dropdown-item" href="./user.jsp">Perfil</a>
                   <a class="dropdown-item" href="./user.jsp">Ajustes</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="../index.jsp">Cerrar Sesion</a>
+                  <a class="dropdown-item" href="../logout">Cerrar Sesion</a>
                 </div>
               </li>
             </ul>

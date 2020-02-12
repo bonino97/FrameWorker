@@ -5,12 +5,8 @@
  */
 package Servlet;
 
-import Controllers.UserController;
-import Models.Session;
-import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +15,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author bonii
+ * @author Juan Cruz
  */
-public class Login extends HttpServlet {
+public class LogoutUser extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,31 +30,12 @@ public class Login extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         
-        try{
-            String username = request.getParameter("userName");
-            String password = request.getParameter("password");
-
-            if(UserController.Auth(username, password)){
-                Session session = new Session();
-                session.setLogedUser(UserController.Get(username));
-                session.setLogedDate(LocalDateTime.now());
-                
-                HttpSession objSession = request.getSession();
-                objSession.setAttribute("session", session);
-                
-                response.sendRedirect("Vistas/dashboard.jsp");
-            }
-            else {
-                HttpSession objSession = request.getSession();
-                objSession.setAttribute("error", "Usuario o clave incorrecto");
-                response.sendRedirect("index.jsp");
-            }
-        }
-        catch(Exception e){
-            System.err.println("ERROR: "+e);
-        }
+        HttpSession objSession = request.getSession();  
+        objSession.removeAttribute("session");
+        
+        response.sendRedirect("index.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

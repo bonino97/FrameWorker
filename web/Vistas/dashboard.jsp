@@ -4,13 +4,14 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-    HttpSession objSession = request.getSession(false);
-    String userName = (String)objSession.getAttribute("userName"); 
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
     
-    if(userName.equals("")){ //SI NO EXISTE LA SESION DEL USUARIO
+    if(userSession == null) {
         response.sendRedirect("index.jsp");
     }
 %>
@@ -114,7 +115,7 @@
                   <a class="dropdown-item" href="./user.jsp">Perfil</a>
                   <a class="dropdown-item" href="./user.jsp">Ajustes</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="../index.jsp">Cerrar Sesion</a>
+                  <a class="dropdown-item" href="../logout">Cerrar Sesion</a>
                 </div>
               </li>
             </ul>
