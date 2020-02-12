@@ -2,27 +2,63 @@
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
         <servlet-name>IniciarSesion</servlet-name>
-        <servlet-class>Servlet.IniciarSesion</servlet-class>
+        <servlet-class>Servlet.Login</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegistrarUsuario</servlet-name>
-        <servlet-class>Servlet.RegistrarUsuario</servlet-class>
+        <servlet-class>Servlet.CreateUser</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ActualizarUsuario</servlet-name>
-        <servlet-class>Servlet.ActualizarUsuario</servlet-class>
+        <servlet-class>Servlet.UpdateUser</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CargarLenguaje</servlet-name>
         <servlet-class>Servlet.CargarLenguaje</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>IniciarProyecto</servlet-name>
-        <servlet-class>Servlet.IniciarProyecto</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>DeleteUser</servlet-name>
         <servlet-class>Servlet.DeleteUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteLengugage</servlet-name>
+        <servlet-class>Servlet.DeleteLenguage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateLenguage</servlet-name>
+        <servlet-class>Servlet.CreateLenguage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateLenguage</servlet-name>
+        <servlet-class>Servlet.UpdateLenguage</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteProject</servlet-name>
+        <servlet-class>Servlet.DeleteProject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProject</servlet-name>
+        <servlet-class>Servlet.UpdateProject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateProject</servlet-name>
+        <servlet-class>Servlet.CreateProject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteLibrary</servlet-name>
+        <servlet-class>Servlet.DeleteLibrary</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateLibrary</servlet-name>
+        <servlet-class>Servlet.CreateLibrary</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteLibraryProject</servlet-name>
+        <servlet-class>Servlet.DeleteLibraryProject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddLibraryProject</servlet-name>
+        <servlet-class>Servlet.AddLibraryProject</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>IniciarSesion</servlet-name>
@@ -41,12 +77,48 @@
         <url-pattern>/cargar-lenguaje</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>IniciarProyecto</servlet-name>
-        <url-pattern>/iniciar-proyecto</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>DeleteUser</servlet-name>
         <url-pattern>/delete-user</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteLengugage</servlet-name>
+        <url-pattern>/delete-lenguage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateLenguage</servlet-name>
+        <url-pattern>/create-lenguage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateLenguage</servlet-name>
+        <url-pattern>/update-lenguage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteProject</servlet-name>
+        <url-pattern>/delete-project</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProject</servlet-name>
+        <url-pattern>/update-project</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateProject</servlet-name>
+        <url-pattern>/create-project</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteLibrary</servlet-name>
+        <url-pattern>/delete-library</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateLibrary</servlet-name>
+        <url-pattern>/create-library</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteLibraryProject</servlet-name>
+        <url-pattern>/delete-library-project</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddLibraryProject</servlet-name>
+        <url-pattern>/add-library-project</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

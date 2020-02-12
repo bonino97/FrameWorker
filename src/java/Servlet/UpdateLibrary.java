@@ -1,16 +1,14 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package Servlet;
 
-import Controllers.UserController;
+import Controllers.LibraryController;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Juan Cruz
  */
-public class DeleteUser extends HttpServlet {
+@WebServlet(name = "UpdateLibrary", urlPatterns = {"/update-library"})
+public class UpdateLibrary extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,13 +30,19 @@ public class DeleteUser extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int id = Integer.parseInt(request.getParameter("id"));
-        
-        UserController.Delete(id);
-        
-        response.sendRedirect("./index.jsp");
+         try{
+            String name = request.getParameter("name");
+            int id = Integer.parseInt(request.getParameter("id"));
+
+            LibraryController.Update(name, id);
+            
+            response.sendRedirect("Vistas/update-library.jsp?id=" + id);
+        }
+        catch(Exception e){
+            System.err.println("ERROR: "+e);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -52,11 +57,7 @@ public class DeleteUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -70,11 +71,7 @@ public class DeleteUser extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

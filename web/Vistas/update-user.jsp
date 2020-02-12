@@ -1,19 +1,18 @@
 <%-- 
-    Document   : proyectos
-    Created on : 13/11/2019, 02:14:38
+    Document   : user
+    Created on : 13/11/2019, 02:14:48
     Author     : bonii
 --%>
 
-<%@page import="Controllers.ProjectController"%>
+<%@page import="Controllers.UserController"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="Models.Project"%>
-
+<%@page import="Models.User"%>
 <%
-    HttpSession objSession = request.getSession();
-    Integer userId = (Integer)objSession.getAttribute("userId"); 
+    HttpSession objSession = request.getSession(false);
+    String username = (String)objSession.getAttribute("userName"); 
+    String error = (String)objSession.getAttribute("error"); 
     
-    ArrayList<Project> Projects = ProjectController.GetAll(userId);
+    User model = UserController.Get(username);
 %>
 
 <!DOCTYPE html>
@@ -32,9 +31,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
-
-  
- 
 </head>
 
 <body class="">
@@ -58,7 +54,7 @@
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active  ">
             <a class="nav-link" href="./update-user.jsp">
               <i class="material-icons">person</i>
               <p>Usuario</p>
@@ -76,7 +72,7 @@
               <p>Librerias</p>
             </a>
           </li>
-          <li class="nav-item active  ">
+          <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
               <p>Proyectos</p>
@@ -128,40 +124,72 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-        <div class="container">
-            <a href="/FrameWorker/Vistas/create-project.jsp" class="btn btn-info pull-right">Agregar proyecto</a>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Lenguaje</th>
-                        <th class="text-right">Acciones</th>
-                    </tr>
-                </thead>
-                 <%  for(int i = 0; i < Projects.size(); i++) {
-                        Project proj = (Project)Projects.get(i);
-               %>
-                <tbody>
-                    <tr>
-                        <td><%= proj.getName() %></td>
-                        <td><%= proj.getDescription() %></td>
-                        <td><%= proj.getLenguage().getName() %></td>
-                        <td class="td-actions text-right">
-                            <a href="./update-project.jsp?id=<%= proj.getCode()%>" rel="tooltip" class="btn btn-success">
-                                <i class="material-icons">edit</i>
-                            </a>
-                             <form style="display: inline-block" action="../delete-project" method="post">
-                                <input type="hidden" name="id" value="<%= proj.getCode()%>" />
-                                <button type="submit" rel="tooltip" class="btn btn-danger">
-                                   <i class="material-icons">close</i>
-                               </button>
-                             </form>
-                        </td>
-                    </tr>
-                </tbody> 
-                <% } %>
-            </table>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Editar Perfil</h4>
+                </div>
+                <div class="card-body">
+                  <form action="../actualizar-usuario" method="post">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Usuario</label>
+                          <input value="<%= model.getUsername() %>" name ="userName" type="text" class="form-control" disabled="true" style="color: gray">
+                          <textarea style="display: none" name="userName" class="form-control" rows="5"><%= model.getUsername() %></textarea>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nombre</label>
+                          <input value="<%= model.getName() %>"  name="name" type="text" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Apellido</label>
+                          <input name="surname" value="<%= model.getSurname() %>" type="text" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                        <label class="bmd-label-floating">Email</label>
+                        <input name ="email" value="<%= model.getEmail() %>" type="email" class="form-control">
+                      </div>
+                     </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label>Descripcion</label>
+                          <div class="form-group">
+                              <textarea name="description" class="form-control" rows="5"><%= model.getDescription() %></textarea>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="submit" class="btn btn-primary pull-right" value="Actualizar" href="./user.jsp"/>
+                  </form>
+                    <form action="../delete-user" method="post">
+                      <input type="hidden" name="id" value="<%= model.getId() %>" />
+                      <input type="submit" class="btn btn-danger pull-left" value="Darme de Baja"/>
+                    </form>
+                  </div>
+                  <br>
+                  <% if(error != null && !error.isEmpty()) {%>
+                    <div class="alert alert-danger" role="alert">
+                       <%=error %>
+                    </div>
+                  <%}%> 
+                  </c:if>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -220,8 +248,6 @@
 
     });
   </script>
-
 </body>
 
 </html>
-

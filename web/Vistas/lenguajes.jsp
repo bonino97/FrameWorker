@@ -4,7 +4,14 @@
     Author     : bonii
 --%>
 
+<%@page import="Controllers.LanguageController"%>
+<%@page import="Models.Lenguage"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    ArrayList<Lenguage> Lenguages = LanguageController.GetAll();
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -45,7 +52,7 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./user.jsp">
+            <a class="nav-link" href="./update-user.jsp">
               <i class="material-icons">person</i>
               <p>Usuario</p>
             </a>
@@ -54,6 +61,12 @@
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./librerias.jsp">
+              <i class="material-icons">menu_book</i>
+              <p>Librerias</p>
             </a>
           </li>
           <li class="nav-item ">
@@ -108,19 +121,40 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-        <div class="container-fluid">
+        <div class="container">
+            <a href="/FrameWorker/Vistas/create-lenguage.jsp" class="btn btn-info pull-right">Agregar lenguaje</a>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Ruta</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                 <%  for(int i = 0; i < Lenguages.size(); i++) {
+                        Lenguage lenguage = (Lenguage)Lenguages.get(i);
+               %>
+                <tbody>
+                    <tr>
+                        <td><%= lenguage.getName() %></td>
+                        <td><%= lenguage.getPath() %></td>
+                        <td class="td-actions text-right">
+                            <a href="./update-lenguage.jsp?id=<%= lenguage.getId()%>" rel="tooltip" class="btn btn-success">
+                                <i class="material-icons">edit</i>
+                            </a>
+                             <form style="display: inline-block" action="../delete-lenguage" method="post">
+                                <input type="hidden" name="id" value="<%= lenguage.getId()%>" />
+                                <button type="submit" rel="tooltip" class="btn btn-danger">
+                                   <i class="material-icons">close</i>
+                               </button>
+                             </form>
+                        </td>
+                    </tr>
+                </tbody> 
+                <% } %>
+            </table>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="copyright float-right">
-            &copy;
-            <script>
-              document.write(new Date().getFullYear())
-            </script>
-          </div>
-        </div>
-      </footer>
     </div>
   </div>
   <!--   Core JS Files   -->

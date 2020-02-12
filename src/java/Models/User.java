@@ -13,12 +13,12 @@ import java.sql.SQLException;
  * @author Juan Cruz
  */
 public class User {
-    public int id;
-    public String username;
-    public String name;
-    public String surname;
-    public String email;
-    public String description;
+    private int id;
+    private String username;
+    private String name;
+    private String surname;
+    private String email;
+    private String description;
     
     public User(ResultSet Resulset) throws SQLException
     {
@@ -32,4 +32,54 @@ public class User {
             description = Resulset.getString("description");
         }
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    
 }

@@ -1,19 +1,15 @@
 <%-- 
-    Document   : proyectos
-    Created on : 13/11/2019, 02:14:38
+    Document   : lenguajes
+    Created on : 13/11/2019, 02:14:16
     Author     : bonii
 --%>
 
-<%@page import="Controllers.ProjectController"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="Controllers.LanguageController"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="Models.Project"%>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="Models.Lenguage"%>
 <%
-    HttpSession objSession = request.getSession();
-    Integer userId = (Integer)objSession.getAttribute("userId"); 
-    
-    ArrayList<Project> Projects = ProjectController.GetAll(userId);
+    ArrayList<Lenguage> Lenguages = LanguageController.GetAll();
 %>
 
 <!DOCTYPE html>
@@ -32,9 +28,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
-
-  
- 
 </head>
 
 <body class="">
@@ -64,19 +57,19 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active">
             <a class="nav-link" href="./librerias.jsp">
               <i class="material-icons">menu_book</i>
               <p>Librerias</p>
             </a>
           </li>
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
               <p>Proyectos</p>
@@ -90,7 +83,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="./dashboard.jsp">Dashboard</a>
+            <p class="navbar-brand">Dashboard</p>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -128,52 +121,42 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-        <div class="container">
-            <a href="/FrameWorker/Vistas/create-project.jsp" class="btn btn-info pull-right">Agregar proyecto</a>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Lenguaje</th>
-                        <th class="text-right">Acciones</th>
-                    </tr>
-                </thead>
-                 <%  for(int i = 0; i < Projects.size(); i++) {
-                        Project proj = (Project)Projects.get(i);
-               %>
-                <tbody>
-                    <tr>
-                        <td><%= proj.getName() %></td>
-                        <td><%= proj.getDescription() %></td>
-                        <td><%= proj.getLenguage().getName() %></td>
-                        <td class="td-actions text-right">
-                            <a href="./update-project.jsp?id=<%= proj.getCode()%>" rel="tooltip" class="btn btn-success">
-                                <i class="material-icons">edit</i>
-                            </a>
-                             <form style="display: inline-block" action="../delete-project" method="post">
-                                <input type="hidden" name="id" value="<%= proj.getCode()%>" />
-                                <button type="submit" rel="tooltip" class="btn btn-danger">
-                                   <i class="material-icons">close</i>
-                               </button>
-                             </form>
-                        </td>
-                    </tr>
-                </tbody> 
-                <% } %>
-            </table>
+        <div class="container-fluid">
+           <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Crear libreria</h4>
+                </div>
+                <div class="card-body">
+                  <form action="../create-library" method="post">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Nombre</label>
+                          <input name ="name" type="text" class="form-control" style="color: gray">
+                        </div>
+                        <div>
+                            <select name="idLen" class="form-control">
+                                <%  for(int i = 0; i < Lenguages.size(); i++) {
+                                    Lenguage lenguage = (Lenguage)Lenguages.get(i);
+                                %>
+                                <option value="<%= lenguage.getId()%>"><%= lenguage.getName()%></option>>
+                                <% } %>
+                            </select>
+                        </div>
+                      </div>
+                        <div class="col-md-12">
+                          <input type="submit" class="btn btn-primary pull-right"  value="Crear" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+           </div>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="copyright float-right">
-            &copy;
-            <script>
-              document.write(new Date().getFullYear())
-            </script>
-          </div>
-        </div>
-      </footer>
     </div>
   </div>
   <!--   Core JS Files   -->
@@ -220,7 +203,6 @@
 
     });
   </script>
-
 </body>
 
 </html>

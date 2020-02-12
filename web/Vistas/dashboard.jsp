@@ -9,6 +9,7 @@
 <%
     HttpSession objSession = request.getSession(false);
     String userName = (String)objSession.getAttribute("userName"); 
+    
     if(userName.equals("")){ //SI NO EXISTE LA SESION DEL USUARIO
         response.sendRedirect("index.jsp");
     }
@@ -53,7 +54,7 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./user.jsp">
+            <a class="nav-link" href="./update-user.jsp">
               <i class="material-icons">person</i>
               <p>Usuario</p>
             </a>
@@ -62,6 +63,12 @@
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./librerias.jsp">
+              <i class="material-icons">menu_book</i>
+              <p>Librerias</p>
             </a>
           </li>
           <li class="nav-item ">

@@ -1,19 +1,15 @@
 <%-- 
-    Document   : proyectos
-    Created on : 13/11/2019, 02:14:38
+    Document   : lenguajes
+    Created on : 13/11/2019, 02:14:16
     Author     : bonii
 --%>
 
-<%@page import="Controllers.ProjectController"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="Controllers.LibraryController"%>
+<%@page import="Models.Library"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="Models.Project"%>
-
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    HttpSession objSession = request.getSession();
-    Integer userId = (Integer)objSession.getAttribute("userId"); 
-    
-    ArrayList<Project> Projects = ProjectController.GetAll(userId);
+    ArrayList<Library> Libraries = LibraryController.GetAll();
 %>
 
 <!DOCTYPE html>
@@ -32,9 +28,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
-
-  
- 
 </head>
 
 <body class="">
@@ -64,19 +57,19 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item active">
             <a class="nav-link" href="./librerias.jsp">
               <i class="material-icons">menu_book</i>
               <p>Librerias</p>
             </a>
           </li>
-          <li class="nav-item active  ">
+          <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
               <p>Proyectos</p>
@@ -129,30 +122,28 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container">
-            <a href="/FrameWorker/Vistas/create-project.jsp" class="btn btn-info pull-right">Agregar proyecto</a>
+            <a href="/FrameWorker/Vistas/create-library.jsp" class="btn btn-info pull-right">Agregar libreria</a>
             <table class="table">
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Descripción</th>
                         <th>Lenguaje</th>
                         <th class="text-right">Acciones</th>
                     </tr>
                 </thead>
-                 <%  for(int i = 0; i < Projects.size(); i++) {
-                        Project proj = (Project)Projects.get(i);
+                 <%  for(int i = 0; i < Libraries.size(); i++) {
+                        Library Lib = (Library)Libraries.get(i);
                %>
                 <tbody>
                     <tr>
-                        <td><%= proj.getName() %></td>
-                        <td><%= proj.getDescription() %></td>
-                        <td><%= proj.getLenguage().getName() %></td>
+                        <td><%= Lib.getName() %></td>
+                        <td><%= Lib.getLenguage().getName() %></td>
                         <td class="td-actions text-right">
-                            <a href="./update-project.jsp?id=<%= proj.getCode()%>" rel="tooltip" class="btn btn-success">
+                            <a href="./update-library.jsp?id=<%= Lib.getId()%>" rel="tooltip" class="btn btn-success">
                                 <i class="material-icons">edit</i>
                             </a>
-                             <form style="display: inline-block" action="../delete-project" method="post">
-                                <input type="hidden" name="id" value="<%= proj.getCode()%>" />
+                             <form style="display: inline-block" action="../delete-library" method="post">
+                                <input type="hidden" name="id" value="<%= Lib.getId()%>" />
                                 <button type="submit" rel="tooltip" class="btn btn-danger">
                                    <i class="material-icons">close</i>
                                </button>
@@ -164,16 +155,6 @@
             </table>
         </div>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="copyright float-right">
-            &copy;
-            <script>
-              document.write(new Date().getFullYear())
-            </script>
-          </div>
-        </div>
-      </footer>
     </div>
   </div>
   <!--   Core JS Files   -->
@@ -220,7 +201,6 @@
 
     });
   </script>
-
 </body>
 
 </html>

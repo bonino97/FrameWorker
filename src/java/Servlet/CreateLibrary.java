@@ -1,15 +1,14 @@
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package Servlet;
 
-import Controllers.UserController;
+import Controllers.LibraryController;
+import Models.Lenguage;
+import Models.Library;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Juan Cruz
  */
-public class DeleteUser extends HttpServlet {
+public class CreateLibrary extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,13 +30,25 @@ public class DeleteUser extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, SQLException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int id = Integer.parseInt(request.getParameter("id"));
         
-        UserController.Delete(id);
-        
-        response.sendRedirect("./index.jsp");
+        try {
+            Library Lib = new Library();
+            Lib.setName(request.getParameter("name"));
+            
+            Lenguage Len = new Lenguage();
+            Len.setId(Integer.parseInt(request.getParameter("idLen")));
+            
+            Lib.setLenguage(Len);
+            
+            LibraryController.Create(Lib);
+            
+            response.sendRedirect("./Vistas/librerias.jsp");
+        }
+        catch(Exception e){
+            System.err.println("ERROR: "+e);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -52,11 +63,7 @@ public class DeleteUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -70,11 +77,7 @@ public class DeleteUser extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(DeleteUser.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
