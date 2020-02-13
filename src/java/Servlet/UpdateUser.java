@@ -5,8 +5,13 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.UserController;
+import Models.Result;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,21 +34,31 @@ public class UpdateUser extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        try{
-            HttpSession session = request.getSession(false);
-            
-            String username = request.getParameter("userName");
-            String name = request.getParameter("name");
-            String surname = request.getParameter("surname");
-            String email = request.getParameter("email");
-            String description = request.getParameter("description");
-            
-            UserController.Update(username, email, name, surname, description);
-            
-            response.sendRedirect("Vistas/user.jsp");
+        try {
+           if(Utils.isValidSession(request))
+           {
+                String username = request.getParameter("userName");
+                String name = request.getParameter("name");
+                String surname = request.getParameter("surname");
+                String email = request.getParameter("email");
+                String description = request.getParameter("description");
+
+                Result Res = UserController.Update(username, email, name, surname, description);
+
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                }
+                
+                response.sendRedirect("Vistas/update-user.jsp");    
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(IOException e){
             System.err.println("ERROR: "+e);
@@ -63,7 +78,11 @@ public class UpdateUser extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -77,7 +96,11 @@ public class UpdateUser extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(UpdateUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**

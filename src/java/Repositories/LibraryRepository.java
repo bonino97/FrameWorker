@@ -7,6 +7,7 @@ package Repositories;
 
 import Models.Library;
 import Models.Project;
+import Models.ResultOperationDB;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +19,9 @@ import java.util.ArrayList;
  */
 public class LibraryRepository extends BaseRepository {
     
-    public void Create(Library Lib)
+    public ResultOperationDB Create(Library Lib) throws SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         
         try{
@@ -29,33 +31,72 @@ public class LibraryRepository extends BaseRepository {
             pst.setString((1), Lib.getName());
             pst.setInt((2), Lib.getLenguage().getId());
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error creando la librearia, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando la librearia, por favor, reintente.");
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando la librearia, por favor, reintente.");
         }
-    }
-    
-    public void Delete(int id) throws SQLException
-    {
-        String query = "DELETE FROM libreria WHERE id = ?";
-            
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), id);
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
         
-        pst.executeUpdate();
+        return Response;
     }
     
-    public Library Get(int id){
+    public ResultOperationDB Delete(int id) throws SQLException
+    {
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst  = null;
+        
+        try{
+            String query = "DELETE FROM libreria WHERE id = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), id);
+            
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error eliminando la librearia, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando la librearia, por favor, reintente.");
+        }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando la librearia, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
+    }
+    
+    public Library Get(int id) throws SQLException{
         LanguageRepository LanRepository = null;
         PreparedStatement pst  = null;
         ResultSet rs = null;
@@ -80,82 +121,115 @@ public class LibraryRepository extends BaseRepository {
             
             return Response;
         }
-        catch(Exception e){
-            System.err.println("ERROR: "+e);
+        catch(SQLException e){
+            return null;
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(Exception e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception ex)
+        {
+            return null;
         }
-        
-        return null;
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     } 
     
     
-   public ArrayList<Library> GetAll() throws SQLException
+  
+  public ArrayList<Library> GetAll() throws SQLException
   {
         LanguageRepository LanRepository = null;
         ArrayList<Library> Response = new ArrayList<>();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
         
-        String query = "SELECT * FROM libreria";
+        try
+        {
+            String query = "SELECT * FROM libreria";
         
-        PreparedStatement pst = getConexion().prepareStatement(query);        
-        
-        ResultSet rs = pst.executeQuery();
-        
-        while (rs.next()) {
-            LanRepository = new LanguageRepository();
-            
-            Library lib = new Library();
-            lib.setId(rs.getInt("id"));
-            lib.setName(rs.getString("name"));
-            lib.setLenguage(LanRepository.Get(rs.getInt("idLenguaje"), false));
+            pst = getConexion().prepareStatement(query);        
 
-            Response.add(lib);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                LanRepository = new LanguageRepository();
+
+                Library lib = new Library();
+                lib.setId(rs.getInt("id"));
+                lib.setName(rs.getString("name"));
+                lib.setLenguage(LanRepository.Get(rs.getInt("idLenguaje"), false));
+
+                Response.add(lib);
+            }
+
+            return Response;
         }
-        
-        return Response;
+        catch(SQLException e){
+            return null;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     }
     
     public ArrayList<Library> GetAll(Project Proj) throws SQLException
     {
         LanguageRepository LanRepository = null;
         ArrayList<Library> Response = new ArrayList<>();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
         
-        String query = "SELECT * " + 
-                       "FROM libreria " + 
-                       "WHERE idLenguaje = ? " +
-                       "AND id NOT IN (SELECT idLibreria FROM proyectolibreria WHERE idProyecto = ?)";
-        
-        PreparedStatement pst = getConexion().prepareStatement(query);    
-        pst.setInt((1), Proj.getLenguage().getId());
-        pst.setInt((2), Proj.getCode());
-        
-        ResultSet rs = pst.executeQuery();
-        
-        while (rs.next()) {
-            LanRepository = new LanguageRepository();
-            
-            Library lib = new Library();
-            lib.setId(rs.getInt("id"));
-            lib.setName(rs.getString("name"));
-            lib.setLenguage(LanRepository.Get(rs.getInt("idLenguaje"), false));
+        try
+        {
+            String query = "SELECT * " + 
+                           "FROM libreria " + 
+                           "WHERE idLenguaje = ? " +
+                           "AND id NOT IN (SELECT idLibreria FROM proyectolibreria WHERE idProyecto = ?)";
 
-            Response.add(lib);
+            pst = getConexion().prepareStatement(query);    
+            pst.setInt((1), Proj.getLenguage().getId());
+            pst.setInt((2), Proj.getCode());
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                LanRepository = new LanguageRepository();
+
+                Library lib = new Library();
+                lib.setId(rs.getInt("id"));
+                lib.setName(rs.getString("name"));
+                lib.setLenguage(LanRepository.Get(rs.getInt("idLenguaje"), false));
+
+                Response.add(lib);
+            }
+
+            return Response;
         }
-        
-        return Response;
+         catch(SQLException e){
+            return null;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     }
     
     
-    public void Update(String name, int id)
+    public ResultOperationDB Update(String name, int id) throws SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         ResultSet rs = null;
         
@@ -166,20 +240,31 @@ public class LibraryRepository extends BaseRepository {
             pst.setString((1), name);
             pst.setInt((2), id);
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error actualizando la librearia, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error actualizando la librearia, por favor, reintente.");
+        }
+        catch(Exception ex)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error actualizando la librearia, por favor, reintente.");
         }
         finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
         }
+        
+        return Response;
     }
 }

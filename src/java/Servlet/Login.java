@@ -43,7 +43,6 @@ public class Login extends HttpServlet {
             if(UserController.Auth(username, password)){
                 Session session = new Session();
                 session.setLogedUser(UserController.Get(username));
-                session.setLogedDate(LocalDateTime.now());
                 
                 HttpSession objSession = request.getSession();
                 objSession.setAttribute("session", session);

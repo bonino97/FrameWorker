@@ -7,6 +7,7 @@ package Repositories;
 
 import Models.Lenguage;
 import Models.Project;
+import Models.ResultOperationDB;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +19,9 @@ import java.util.ArrayList;
  */
 public class ProjectRepository extends BaseRepository {
     
-    public void Create(Project Proj, int idUsuario)
+    public ResultOperationDB Create(Project Proj, int idUsuario) throws SQLException, SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         
         try{
@@ -31,33 +33,72 @@ public class ProjectRepository extends BaseRepository {
             pst.setInt((3), Proj.getLenguage().getId());
             pst.setInt((4), idUsuario);
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error creando el proyecto, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando el proyecto, por favor, reintente.");
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando el proyecto, por favor, reintente.");
         }
-    }
-    
-    public void Delete(int code) throws SQLException
-    {
-        String query = "DELETE FROM proyecto WHERE code = ?";
-            
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), code);
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
         
-        pst.executeUpdate();
+        return Response;
     }
     
-    public Project Get(int code){
+    public ResultOperationDB Delete(int code) throws SQLException
+    {
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst  = null;
+        
+        try {
+            String query = "DELETE FROM proyecto WHERE code = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), code);
+        
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error eliminado el proyecto, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminado el proyecto, por favor, reintente.");
+        }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminado el proyecto, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
+    }
+    
+    public Project Get(int code) throws SQLException{
         LibraryProjectRepository LibProjRepository = null;
         PreparedStatement pst  = null;
         ResultSet rs = null;
@@ -91,58 +132,71 @@ public class ProjectRepository extends BaseRepository {
             
             return Response;
         }
-        catch(SQLException e){
-            System.err.println("ERROR: "+e);
+        catch(SQLException ex){
+            return null;
+        }
+        catch(Exception e){
+            return null;
         }
         finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
         }
-        
-        return null;
     }
     
     public ArrayList<Project> GetAll(int idUsuario) throws SQLException
     {
         LibraryProjectRepository LibProjRepository = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
         ArrayList<Project> Response = new ArrayList<>();
         
-        String query = "SELECT code, pro.name nameProject, descripcion, len.name nameLenguage FROM proyecto pro " +
-                       "    INNER JOIN lenguaje len ON len.id = pro.idLenguaje " + 
-                       "WHERE idUsuario = ?";
-        
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), idUsuario);
-        
-        ResultSet rs = pst.executeQuery();
-        
-        while (rs.next()) {
+        try
+        {
+            String query = "SELECT code, pro.name nameProject, descripcion, len.name nameLenguage FROM proyecto pro " +
+                           "    INNER JOIN lenguaje len ON len.id = pro.idLenguaje " + 
+                           "WHERE idUsuario = ?";
+
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), idUsuario);
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
                 LibProjRepository = new LibraryProjectRepository();
-            
+
                 Project proj = new Project();
                 proj.setCode(rs.getInt("code"));
                 proj.setName(rs.getString("nameProject"));
                 proj.setDescription(rs.getString("descripcion"));
                 proj.setLibraries(LibProjRepository.Get(proj.getCode(), false));
-                
+
                 Lenguage len = new Lenguage();
                 len.setName(rs.getString("nameLenguage"));
                 proj.setLenguage(len);
-                
+
                 Response.add(proj);
+            }
+
+            return Response;
         }
-        
-        return Response;
+        catch(SQLException ex){
+            return null;
+        }
+        catch(Exception e){
+            return null;
+        }
+        finally{
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     }
     
-    public void Update(String name, String description, int code)
+    public ResultOperationDB Update(String name, String description, int code) throws SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         ResultSet rs = null;
         
@@ -154,20 +208,30 @@ public class ProjectRepository extends BaseRepository {
             pst.setString((2), description);
             pst.setInt((3), code);
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error actualizando el proyecto, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error actualizando el proyecto, por favor, reintente.");
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando el proyecto, por favor, reintente.");
         }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
     }
 }

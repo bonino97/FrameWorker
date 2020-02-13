@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.ProjectController;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -34,11 +35,19 @@ public class DeleteProject extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
        
-        int code = Integer.parseInt(request.getParameter("id"));
+        if(Utils.isValidSession(request))
+        {
+            int code = Integer.parseInt(request.getParameter("id"));
         
-        ProjectController.Delete(code);
+            ProjectController.Delete(code);
         
-        response.sendRedirect("./Vistas/proyectos.jsp");
+            response.sendRedirect("./Vistas/proyectos.jsp");
+        }
+        else
+        {
+            response.sendRedirect("index.jsp");
+        }
+        
         
     }
 

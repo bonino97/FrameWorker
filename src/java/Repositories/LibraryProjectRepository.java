@@ -6,6 +6,7 @@
 package Repositories;
 
 import Models.Library;
+import Models.ResultOperationDB;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  */
 public class LibraryProjectRepository extends BaseRepository {
     
-    public ArrayList<Library> Get(int codProj, boolean closeConexion)        
+    public ArrayList<Library> Get(int codProj, boolean closeConexion) throws SQLException        
     {
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -43,45 +44,98 @@ public class LibraryProjectRepository extends BaseRepository {
 
             return Response;
         }
-         catch(SQLException e){
-            System.err.println("ERROR: "+e);
-            return Response;
+        catch(SQLException e){
+            return null;
         }
-        finally{
-            try {
-                if(closeConexion)
-                {
-                    if(getConexion() != null) getConexion().close();
-                }
-                
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
+        catch(Exception e){
+            return null;
+        }
+        finally {
+            if(closeConexion)
+            {
+                if(getConexion() != null) getConexion().close();
             }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
         }
     }
     
-     public void Delete(int idProj, int idLib) throws SQLException
+    public ResultOperationDB Delete(int idProj, int idLib) throws SQLException
     {
-        String query = "DELETE FROM proyectolibreria WHERE idProyecto = ? AND idLibreria = ?";
-            
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), idProj);
-        pst.setInt((2), idLib);
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst = null;
         
-        pst.executeUpdate();
+        try
+        {
+            String query = "DELETE FROM proyectolibreria WHERE idProyecto = ? AND idLibreria = ?";
+
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), idProj);
+            pst.setInt((2), idLib);
+
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error eliminando la libreria del proyecto, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando la libreria del proyecto, por favor, reintente.");
+        }
+        catch(Exception e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando la libreria del proyecto, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
     }
      
-    public void Add(int idProj, int idLib) throws SQLException
+    public ResultOperationDB Add(int idProj, int idLib) throws SQLException
     {
-        String query = "INSERT INTO proyectolibreria (idProyecto, idLibreria) VALUES(?, ?)";
-            
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), idProj);
-        pst.setInt((2), idLib);
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst = null;
         
-        pst.executeUpdate();
+        try
+        {
+            String query = "INSERT INTO proyectolibreria (idProyecto, idLibreria) VALUES(?, ?)";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), idProj);
+            pst.setInt((2), idLib);
+
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error añadiendo la libreria al proyecto, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error añadiendo la libreria al proyecto, por favor, reintente.");
+        }
+        catch(Exception e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error añadiendo la libreria al proyecto, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
     }
 }

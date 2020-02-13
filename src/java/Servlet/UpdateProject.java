@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.ProjectController;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -31,13 +32,20 @@ public class UpdateProject extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
          try{
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            int code = Integer.parseInt(request.getParameter("code"));
+           if(Utils.isValidSession(request))
+           {
+                String name = request.getParameter("name");
+                String description = request.getParameter("description");
+                int code = Integer.parseInt(request.getParameter("code"));
 
-            ProjectController.Update(name, description, code);
-            
-            response.sendRedirect("Vistas/update-project.jsp?id=" + code);
+                ProjectController.Update(name, description, code);
+
+                response.sendRedirect("Vistas/update-project.jsp?id=" + code);
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

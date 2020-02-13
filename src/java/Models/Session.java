@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class Session {
     
     private User logedUser;
-    private LocalDateTime logedDate;
 
     public User getLogedUser() {
         return logedUser;
@@ -23,15 +22,4 @@ public class Session {
     public void setLogedUser(User logedUser) {
         this.logedUser = logedUser;
     }
-
-    public LocalDateTime getLogedDate() {
-        return logedDate;
-    }
-
-    public void setLogedDate(LocalDateTime logedDate) {
-        this.logedDate = logedDate;
-    }
-    
-    
-    
 }

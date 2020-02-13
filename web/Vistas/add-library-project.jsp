@@ -4,6 +4,7 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="Controllers.LibraryController"%>
 <%@page import="Controllers.ProjectController"%>
 <%@page import="Models.Project"%>
@@ -12,6 +13,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Models.Lenguage"%>
 <%
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error"); 
+    
+    if(userSession == null) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+    
     Project Proj = ProjectController.Get(Integer.parseInt(request.getParameter("code")));
     
     ArrayList<Library> Libraries = LibraryController.GetAll(Proj);
@@ -154,6 +164,15 @@
                     </div>
                   </form>
                 </div>
+                <br>
+                  <%  objSession.removeAttribute("error");     
+                      if(error != null && !error.isEmpty()) 
+                  {%>
+                    <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                       <%=error %>
+                    </div>
+                  <%}%> 
+                  </c:if>
               </div>
             </div>
            </div>

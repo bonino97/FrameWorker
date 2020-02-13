@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.ProjectController;
 import Models.Lenguage;
 import Models.Project;
@@ -34,21 +35,28 @@ public class CreateProject extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-            Project proj = new Project();
-            proj.setName(request.getParameter("name"));
-            proj.setDescription(request.getParameter("description"));
-            
-            Lenguage Len = new Lenguage();
-            Len.setId(Integer.parseInt(request.getParameter("idLen")));
-            
-            proj.setLenguage(Len);
-            
-            HttpSession objSession = request.getSession();
-            Integer userId = (Integer)objSession.getAttribute("userId"); 
-            
-            ProjectController.Create(proj, userId);
-            
-            response.sendRedirect("./Vistas/proyectos.jsp");
+           if(Utils.isValidSession(request))
+           {
+                Project proj = new Project();
+                proj.setName(request.getParameter("name"));
+                proj.setDescription(request.getParameter("description"));
+
+                Lenguage Len = new Lenguage();
+                Len.setId(Integer.parseInt(request.getParameter("idLen")));
+
+                proj.setLenguage(Len);
+
+                HttpSession objSession = request.getSession();
+                Integer userId = (Integer)objSession.getAttribute("userId"); 
+
+                ProjectController.Create(proj, userId);
+
+                response.sendRedirect("./Vistas/proyectos.jsp");
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

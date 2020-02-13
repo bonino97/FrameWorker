@@ -4,6 +4,7 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="Controllers.ProjectController"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
@@ -11,9 +12,14 @@
 
 <%
     HttpSession objSession = request.getSession();
-    Integer userId = (Integer)objSession.getAttribute("userId"); 
+    Session userSession = (Session)objSession.getAttribute("session"); 
     
-    ArrayList<Project> Projects = ProjectController.GetAll(userId);
+    if(userSession == null) {
+       response.sendRedirect("../index.jsp");
+       return;
+    }
+    
+    ArrayList<Project> Projects = ProjectController.GetAll(userSession.getLogedUser().getId());
 %>
 
 <!DOCTYPE html>

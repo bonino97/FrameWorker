@@ -4,11 +4,20 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="Controllers.LanguageController"%>
 <%@page import="Models.Lenguage"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
+    
+    if(userSession == null) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+    
     ArrayList<Lenguage> Lenguages = LanguageController.GetAll();
 %>
 

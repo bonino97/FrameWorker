@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LibraryProjectController;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -33,12 +34,20 @@ public class DeleteLibraryProject extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
-        int idProj = Integer.parseInt(request.getParameter("idProj"));
-        int idLib = Integer.parseInt(request.getParameter("idLib"));
         
-        LibraryProjectController.Delete(idProj, idLib);
-        
-        response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+        if(Utils.isValidSession(request))
+        {
+            int idProj = Integer.parseInt(request.getParameter("idProj"));
+            int idLib = Integer.parseInt(request.getParameter("idLib"));
+
+            LibraryProjectController.Delete(idProj, idLib);
+
+            response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+        }
+        else
+        {
+            response.sendRedirect("index.jsp");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

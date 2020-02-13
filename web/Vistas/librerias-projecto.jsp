@@ -4,6 +4,7 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="Controllers.ProjectController"%>
 <%@page import="Models.Project"%>
 <%@page import="Models.Library"%>
@@ -11,6 +12,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Models.Lenguage"%>
 <%
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
+    
+    if(userSession == null) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+    
     Project Proj = ProjectController.Get(Integer.parseInt(request.getParameter("code")));
 %>
 

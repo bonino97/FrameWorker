@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.UserController;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,17 +33,23 @@ public class CreateUser extends HttpServlet {
         throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        
-        try{
-            String username = request.getParameter("username");
-            String name = request.getParameter("name");
-            String surname = request.getParameter("surname");
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-            
-            UserController.Create(username, password, name, surname, email);
-            
-            response.sendRedirect("index.jsp");
+        try {
+            if(Utils.isValidSession(request))
+           {
+                String username = request.getParameter("username");
+                String name = request.getParameter("name");
+                String surname = request.getParameter("surname");
+                String password = request.getParameter("password");
+                String email = request.getParameter("email");
+
+                UserController.Create(username, password, name, surname, email);
+
+                response.sendRedirect("index.jsp");
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

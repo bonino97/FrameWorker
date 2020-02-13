@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LibraryController;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -32,13 +33,20 @@ public class UpdateLibrary extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-         try{
-            String name = request.getParameter("name");
-            int id = Integer.parseInt(request.getParameter("id"));
+         try {
+           if(Utils.isValidSession(request))
+           {
+                String name = request.getParameter("name");
+                int id = Integer.parseInt(request.getParameter("id"));
 
-            LibraryController.Update(name, id);
-            
-            response.sendRedirect("Vistas/update-library.jsp?id=" + id);
+                LibraryController.Update(name, id);
+
+                response.sendRedirect("Vistas/update-library.jsp?id=" + id);    
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

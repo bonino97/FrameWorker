@@ -6,6 +6,8 @@
 package Controllers;
 
 import Models.Project;
+import Models.Result;
+import Models.ResultOperationDB;
 import Repositories.ProjectRepository;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,31 +25,73 @@ public class ProjectController {
         return Repository.GetAll(userId);
     }
     
-    public static Project Get(int code)
+    public static Project Get(int code) throws SQLException
     {
         ProjectRepository Repository = new ProjectRepository();
         
         return Repository.Get(code);
     }
     
-    public static void Create(Project proj, Integer userId)
+    public static Result Create(Project proj, Integer userId) throws SQLException
     {
+        Result Response = new Result();
+        
         ProjectRepository Repository = new ProjectRepository();
         
-        Repository.Create(proj, userId);
+        ResultOperationDB DBResult = Repository.Create(proj, userId);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Update(String name, String description, int code)
+    public static Result Update(String name, String description, int code) throws SQLException
     {
+        Result Response = new Result();
+        
         ProjectRepository Repository = new ProjectRepository();
     
-        Repository.Update(name, description, code);
+        ResultOperationDB DBResult = Repository.Update(name, description, code);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Delete(int code) throws SQLException
+    public static Result Delete(int code) throws SQLException
     {
+        Result Response = new Result();
+        
         ProjectRepository Repository = new ProjectRepository();   
     
-        Repository.Delete(code);
+        ResultOperationDB DBResult = Repository.Delete(code);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
 }

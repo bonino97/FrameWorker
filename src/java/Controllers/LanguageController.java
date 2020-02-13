@@ -6,6 +6,8 @@
 package Controllers;
 
 import Models.Lenguage;
+import Models.Result;
+import Models.ResultOperationDB;
 import Repositories.LanguageRepository;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  */
 public class LanguageController {
     
-    public static Lenguage Get(int id)
+    public static Lenguage Get(int id) throws SQLException
     {
         LanguageRepository Repository = new LanguageRepository();
     
@@ -30,25 +32,67 @@ public class LanguageController {
         return Repository.GetAll();
     }
     
-    public static void Create(Lenguage Len)
+    public static Result Create(Lenguage Len) throws SQLException
     {
+        Result Response = new Result();
+        
         LanguageRepository Repository = new LanguageRepository();
         
-        Repository.Create(Len);
+        ResultOperationDB DBResult = Repository.Create(Len);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Update(String name, String path, int id)
+    public static Result Update(String name, String path, int id) throws SQLException
     {   
+        Result Response = new Result();
+        
         LanguageRepository Repository = new LanguageRepository();
 
-        Repository.Update(name, path, id);
+        ResultOperationDB DBResult = Repository.Update(name, path, id);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Delete(int id) throws SQLException
+    public static Result Delete(int id) throws SQLException
     {
+        Result Response = new Result();
+        
         LanguageRepository Repository = new LanguageRepository();
         
-        Repository.Delete(id);
+        ResultOperationDB DBResult = Repository.Delete(id);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
 }

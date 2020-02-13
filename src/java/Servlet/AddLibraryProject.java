@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LibraryProjectController;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -31,12 +32,19 @@ public class AddLibraryProject extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try {
-           int idLen = Integer.parseInt(request.getParameter("idLen"));
-           int idProj = Integer.parseInt(request.getParameter("idProj"));
-            
-            LibraryProjectController.Add(idProj, idLen);
-           
-           response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+           if(Utils.isValidSession(request))
+           {
+                int idLen = Integer.parseInt(request.getParameter("idLen"));
+                int idProj = Integer.parseInt(request.getParameter("idProj"));
+
+                 LibraryProjectController.Add(idProj, idLen);
+
+                response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

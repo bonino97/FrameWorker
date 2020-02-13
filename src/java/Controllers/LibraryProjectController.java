@@ -6,6 +6,8 @@
 package Controllers;
 
 import Models.Library;
+import Models.Result;
+import Models.ResultOperationDB;
 import Repositories.LibraryProjectRepository;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,18 +18,46 @@ import java.util.ArrayList;
  */
 public class LibraryProjectController {
     
-    public static void Add(int idProj, int idLen) throws SQLException
+    public static Result Add(int idProj, int idLen) throws SQLException
     {
+        Result Response = new Result();
+     
         LibraryProjectRepository Repository = new LibraryProjectRepository();
         
-        Repository.Add(idProj, idLen);
+        ResultOperationDB DBResult = Repository.Add(idProj, idLen);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Delete(int idProj, int idLib) throws SQLException
+    public static Result Delete(int idProj, int idLib) throws SQLException
     {   
+        Result Response = new Result();
+        
         LibraryProjectRepository Repository = new LibraryProjectRepository();
 
-        Repository.Delete(idProj, idLib);
+        ResultOperationDB DBResult = Repository.Delete(idProj, idLib);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
 }

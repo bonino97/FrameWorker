@@ -12,7 +12,8 @@
     Session userSession = (Session)objSession.getAttribute("session"); 
     
     if(userSession == null) {
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("../index.jsp");
+        return;
     }
 %>
 <!DOCTYPE html>

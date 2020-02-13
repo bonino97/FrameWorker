@@ -7,6 +7,8 @@ package Controllers;
 
 import Models.Library;
 import Models.Project;
+import Models.Result;
+import Models.ResultOperationDB;
 import Repositories.LibraryRepository;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
  */
 public class LibraryController {
     
-    public static Library Get(int id)
+    public static Library Get(int id) throws SQLException
     {
         LibraryRepository Repository = new LibraryRepository();
         
@@ -38,24 +40,66 @@ public class LibraryController {
         return Repository.GetAll(Proj);
     }
     
-    public static void Create(Library Lib)
+    public static Result Create(Library Lib) throws SQLException
     {
+        Result Response = new Result();
+        
         LibraryRepository Repository = new LibraryRepository();
         
-        Repository.Create(Lib);
+        ResultOperationDB DBResult = Repository.Create(Lib);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Update(String name, int id)
+    public static Result Update(String name, int id) throws SQLException
     {
+        Result Response = new Result();
+        
         LibraryRepository Repository = new LibraryRepository();
         
-        Repository.Update(name, id);
+        ResultOperationDB DBResult = Repository.Update(name, id);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
     
-    public static void Delete(int id) throws SQLException
+    public static Result Delete(int id) throws SQLException
     {
+        Result Response = new Result();
+        
         LibraryRepository Repository = new LibraryRepository();
         
-        Repository.Delete(id);
+        ResultOperationDB DBResult = Repository.Delete(id);
+        
+         if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
     }
 }

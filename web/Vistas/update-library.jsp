@@ -4,11 +4,20 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Controllers.LibraryController"%>
 <%@page import="Models.Library"%>
 <%
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
+    
+    if(userSession == null) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+    
     Library Lib = LibraryController.Get(Integer.parseInt(request.getParameter("id")));
 %>
 

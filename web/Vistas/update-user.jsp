@@ -4,15 +4,21 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page import="Controllers.UserController"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="Models.User"%>
 <%
-    HttpSession objSession = request.getSession(false);
-    String username = (String)objSession.getAttribute("userName"); 
+    HttpSession objSession = request.getSession();
+    Session userSession = (Session)objSession.getAttribute("session"); 
     String error = (String)objSession.getAttribute("error"); 
     
-    User model = UserController.Get(username);
+    if(userSession == null) {
+        response.sendRedirect("../index.jsp");
+        return;
+    }
+    
+    User model = UserController.Get(userSession.getLogedUser().getUsername());
 %>
 
 <!DOCTYPE html>
@@ -180,8 +186,10 @@
                     </form>
                   </div>
                   <br>
-                  <% if(error != null && !error.isEmpty()) {%>
-                    <div class="alert alert-danger" role="alert">
+                  <%  objSession.removeAttribute("error");     
+                      if(error != null && !error.isEmpty()) 
+                  {%>
+                    <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
                        <%=error %>
                     </div>
                   <%}%> 

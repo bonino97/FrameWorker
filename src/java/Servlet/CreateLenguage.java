@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LanguageController;
 import Models.Lenguage;
 import java.io.IOException;
@@ -31,15 +32,21 @@ public class CreateLenguage extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-    
          try {
-            Lenguage Len = new Lenguage();
-            Len.setName(request.getParameter("name"));
-            Len.setPath(request.getParameter("path"));
-            
-            LanguageController.Create(Len);
-            
-            response.sendRedirect("./Vistas/lenguajes.jsp");
+           if(Utils.isValidSession(request))
+           {
+                Lenguage Len = new Lenguage();
+                Len.setName(request.getParameter("name"));
+                Len.setPath(request.getParameter("path"));
+
+                LanguageController.Create(Len);
+
+                response.sendRedirect("./Vistas/lenguajes.jsp");
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           } 
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LibraryController;
 import Models.Lenguage;
 import Models.Library;
@@ -32,19 +33,25 @@ public class CreateLibrary extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
         try {
-            Library Lib = new Library();
-            Lib.setName(request.getParameter("name"));
-            
-            Lenguage Len = new Lenguage();
-            Len.setId(Integer.parseInt(request.getParameter("idLen")));
-            
-            Lib.setLenguage(Len);
-            
-            LibraryController.Create(Lib);
-            
-            response.sendRedirect("./Vistas/librerias.jsp");
+           if(Utils.isValidSession(request))
+           {
+                Library Lib = new Library();
+                Lib.setName(request.getParameter("name"));
+
+                Lenguage Len = new Lenguage();
+                Len.setId(Integer.parseInt(request.getParameter("idLen")));
+
+                Lib.setLenguage(Len);
+
+                LibraryController.Create(Lib);
+
+                response.sendRedirect("./Vistas/librerias.jsp");
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }   
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

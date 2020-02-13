@@ -5,6 +5,7 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.LanguageController;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -31,14 +32,21 @@ public class UpdateLenguage extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        try{
-            String name = request.getParameter("name");
-            String path = request.getParameter("path");         
-            int id = Integer.parseInt(request.getParameter("id"));
+        try {
+           if(Utils.isValidSession(request))
+           {
+                String name = request.getParameter("name");
+                String path = request.getParameter("path");         
+                int id = Integer.parseInt(request.getParameter("id"));
 
-            LanguageController.Update(name, path, id);
-            
-            response.sendRedirect("Vistas/update-lenguage.jsp?id=" + id);
+                LanguageController.Update(name, path, id);
+
+                response.sendRedirect("Vistas/update-lenguage.jsp?id=" + id);    
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }   
         }
         catch(Exception e){
             System.err.println("ERROR: "+e);

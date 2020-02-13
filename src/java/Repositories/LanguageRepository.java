@@ -6,6 +6,7 @@
 package Repositories;
 
 import Models.Lenguage;
+import Models.ResultOperationDB;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +18,9 @@ import java.util.ArrayList;
  */
 public class LanguageRepository extends BaseRepository {
     
-    public void Create(Lenguage Len)
+    public ResultOperationDB Create(Lenguage Len) throws SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         
         try{
@@ -28,24 +30,36 @@ public class LanguageRepository extends BaseRepository {
             pst.setString((1), Len.getName());
             pst.setString((2), Len.getPath());
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error creando el lenguaje, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando el lenguaje, por favor, reintente.");
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception ex)
+        {
+           Response.setResult(ResultOperationDB.Results.Error);
+           Response.setMessage("Hubo un error creando el lenguaje, por favor, reintente.");
         }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
     }
     
-    public void Update(String name, String path, int id)
+    public ResultOperationDB Update(String name, String path, int id) throws SQLException
     {
+        ResultOperationDB Response = new ResultOperationDB();
         PreparedStatement pst  = null;
         ResultSet rs = null;
         
@@ -57,24 +71,35 @@ public class LanguageRepository extends BaseRepository {
             pst.setString((2), path);
             pst.setInt((3), id);
             
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error actualizando el lenguaje, por favor, reintente.");
+            }
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error creando el lenguaje, por favor, reintente.");
         }
-        finally{
-            try{
-                if(getConexion() != null) getConexion().close();
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception ex)
+        {
+           Response.setResult(ResultOperationDB.Results.Error);
+           Response.setMessage("Hubo un error creando el lenguaje, por favor, reintente.");
         }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
+        
+        return Response;
     } 
     
-    public Lenguage Get(int id, boolean closeConexion){
+    public Lenguage Get(int id, boolean closeConexion) throws SQLException{
         PreparedStatement pst  = null;
         ResultSet rs = null;
         Lenguage Response = new Lenguage();
@@ -97,57 +122,94 @@ public class LanguageRepository extends BaseRepository {
             return Response;
         }
         catch(SQLException e){
-            System.err.println("ERROR: "+e);
+            return null;
         }
-        finally{
-            try{
-                if(closeConexion)
-                {
-                    if(getConexion() != null) getConexion().close();
-                }
-                
-                if(pst != null) pst.close();
-                if(rs != null) rs.close();
-            }
-            catch(SQLException e){
-                System.err.println("ERROR: "+e);    
-            }
+        catch(Exception e){
+            return null;
         }
-        
-        return null;
+        finally {
+            if(closeConexion)
+            {
+                if(getConexion() != null) getConexion().close();
+            }
+
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     } 
     
-    public void Delete(int id) throws SQLException
+    public ResultOperationDB Delete(int id) throws SQLException
     {
-        String query = "DELETE FROM lenguaje WHERE id = ?";
-            
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        pst.setInt((1), id);
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst = null;
         
-        pst.executeUpdate();
+        try
+        {
+            String query = "DELETE FROM lenguaje WHERE id = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), id);
+        
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error eliminando el lenguaje, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando el lenguaje, por favor, reintente.");
+        }
+        catch(Exception e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error eliminando el lenguaje, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response; 
     }
     
     public ArrayList<Lenguage> GetAll() throws SQLException
     {
         ArrayList<Lenguage> Response = new ArrayList<>();
+        PreparedStatement pst = null;
         
-        String query = "SELECT * FROM lenguaje";
-        
-        PreparedStatement pst = getConexion().prepareStatement(query);
-        
-        ResultSet rs = pst.executeQuery();
-        
-        while (rs.next()) {
+        try
+        {
+            String query = "SELECT * FROM lenguaje";
 
+            pst = getConexion().prepareStatement(query);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
                 Lenguage leng = new Lenguage();
                 leng.setId(rs.getInt("id"));
                 leng.setName(rs.getString("name"));
                 leng.setPath(rs.getString("path"));
-                
+
                 Response.add(leng);
+            }
+
+            return Response;
         }
-        
-        return Response;
+        catch(SQLException e){
+            return null;
+        }
+        catch(Exception e){
+            return null;
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
     }
    
 }
