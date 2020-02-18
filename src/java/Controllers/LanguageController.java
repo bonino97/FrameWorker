@@ -38,6 +38,21 @@ public class LanguageController {
         
         LanguageRepository Repository = new LanguageRepository();
         
+        if(Len.getName().isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(Len.getPath().isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("La ruta no puede ser vacía.");
+            
+            return Response;
+        }
+        
         ResultOperationDB DBResult = Repository.Create(Len);
         
         if(DBResult.getResult() == ResultOperationDB.Results.OK)
@@ -59,6 +74,21 @@ public class LanguageController {
         
         LanguageRepository Repository = new LanguageRepository();
 
+        if(name.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(path.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("La ruta no puede ser vacía.");
+            
+            return Response;
+        }
+        
         ResultOperationDB DBResult = Repository.Update(name, path, id);
         
         if(DBResult.getResult() == ResultOperationDB.Results.OK)

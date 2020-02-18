@@ -38,6 +38,21 @@ public class ProjectController {
         
         ProjectRepository Repository = new ProjectRepository();
         
+        if(proj.getName().isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(proj.getDescription().isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("La descripcion no puede ser vacia.");
+            
+            return Response;
+        }
+        
         ResultOperationDB DBResult = Repository.Create(proj, userId);
         
         if(DBResult.getResult() == ResultOperationDB.Results.OK)
@@ -59,6 +74,21 @@ public class ProjectController {
         
         ProjectRepository Repository = new ProjectRepository();
     
+        if(name.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(description.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("La descripcion no puede ser vacia.");
+            
+            return Response;
+        }
+        
         ResultOperationDB DBResult = Repository.Update(name, description, code);
         
         if(DBResult.getResult() == ResultOperationDB.Results.OK)

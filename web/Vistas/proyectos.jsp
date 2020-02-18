@@ -12,7 +12,8 @@
 
 <%
     HttpSession objSession = request.getSession();
-    Session userSession = (Session)objSession.getAttribute("session"); 
+    Session userSession = (Session)objSession.getAttribute("session");
+    String error = (String)objSession.getAttribute("error"); 
     
     if(userSession == null) {
        response.sendRedirect("../index.jsp");
@@ -20,6 +21,11 @@
     }
     
     ArrayList<Project> Projects = ProjectController.GetAll(userSession.getLogedUser().getId());
+    
+    if(Projects == null)
+    {
+        error = "No pudimos recuperar los projectos.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -70,6 +76,13 @@
               <p>Usuario</p>
             </a>
           </li>
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
@@ -82,6 +95,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item active  ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -145,6 +159,7 @@
                         <th class="text-right">Acciones</th>
                     </tr>
                 </thead>
+                <% if(Projects != null) {%>
                  <%  for(int i = 0; i < Projects.size(); i++) {
                         Project proj = (Project)Projects.get(i);
                %>
@@ -167,7 +182,15 @@
                     </tr>
                 </tbody> 
                 <% } %>
+                <% } %>
             </table>
+            <%  objSession.removeAttribute("error");     
+                if(error != null && !error.isEmpty()) 
+            {%>
+              <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                 <%=error %>
+              </div>
+            <%}%> 
         </div>
       </div>
       <footer class="footer">

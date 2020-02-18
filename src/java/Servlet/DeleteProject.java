@@ -7,6 +7,7 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.ProjectController;
+import Models.Result;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,20 +37,33 @@ public class DeleteProject extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
        
-        if(Utils.isValidSession(request))
+        try {
+            if(Utils.isValidSession(request))
+            {
+                int code = Integer.parseInt(request.getParameter("id"));
+
+                Result Res = ProjectController.Delete(code);
+
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                }
+
+                response.sendRedirect("./Vistas/proyectos.jsp");
+            }
+            else
+            {
+                response.sendRedirect("index.jsp");
+            }
+        }
+        catch(IOException | NumberFormatException | SQLException e)
         {
-            int code = Integer.parseInt(request.getParameter("id"));
-        
-            ProjectController.Delete(code);
-        
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
             response.sendRedirect("./Vistas/proyectos.jsp");
         }
-        else
-        {
-            response.sendRedirect("index.jsp");
-        }
-        
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

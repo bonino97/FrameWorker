@@ -12,13 +12,19 @@
 <%
     HttpSession objSession = request.getSession();
     Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error"); 
     
-    if(userSession == null) {
+    if(userSession == null || !userSession.getLogedUser().isIsSuperuser()) {
         response.sendRedirect("../index.jsp");
         return;
     }
     
     Library Lib = LibraryController.Get(Integer.parseInt(request.getParameter("id")));
+    
+    if(Lib == null)
+    {
+        error = "Hubo un error al recuperar la libreria.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -60,18 +66,26 @@
               <p>Dashboard</p>
             </a>
           </li>
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
           <li class="nav-item ">
-            <a class="nav-link" href="./update-user.jsp">
-              <i class="material-icons">person</i>
-              <p>Usuario</p>
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
             </a>
           </li>
-          <li class="nav-item  ">
+          <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
             </a>
           </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./librerias.jsp">
+              <i class="material-icons">menu_book</i>
+              <p>Librerias</p>
+            </a>
+          </li>
+          <%}%>
           <li class="nav-item active">
             <a class="nav-link" href="./librerias.jsp">
               <i class="material-icons">menu_book</i>
@@ -138,6 +152,7 @@
                   <h4 class="card-title">Modificar libreria</h4>
                 </div>
                 <div class="card-body">
+                  <% if(Lib != null) {%>
                   <form action="../update-library" method="post">
                     <input name="id" type="hidden" value="<%= Lib.getId()%>" />
                     <div class="row">
@@ -153,7 +168,16 @@
                       </div>
                     </div>
                   </form>
+                   <%}%>
                 </div>
+                <br>
+                <%  objSession.removeAttribute("error");     
+                if(error != null && !error.isEmpty()) 
+                {%>
+                  <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                     <%=error %>
+                  </div>
+                <%}%> 
               </div>
             </div>
            </div>

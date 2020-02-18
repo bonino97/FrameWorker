@@ -19,18 +19,22 @@ public class User {
     private String surname;
     private String email;
     private String description;
-    
-    public User(ResultSet Resulset) throws SQLException
+    private boolean isSuperuser;
+
+    public User(ResultSet Resulset, boolean withoutResulsetNext) throws SQLException
     {
-        if(Resulset.next())
+        if(!withoutResulsetNext)
         {
-            id = Resulset.getInt("id");
-            username = Resulset.getString("username");
-            name = Resulset.getString("name");
-            surname = Resulset.getString("surname");
-            email = Resulset.getString("email");
-            description = Resulset.getString("description");
+            Resulset.next();
         }
+        
+        id = Resulset.getInt("id");
+        username = Resulset.getString("username");
+        name = Resulset.getString("name");
+        surname = Resulset.getString("surname");
+        email = Resulset.getString("email");
+        description = Resulset.getString("description");
+        isSuperuser = Resulset.getBoolean("isSuperuser");
     }
 
     public int getId() {
@@ -74,6 +78,11 @@ public class User {
     }
 
     public String getDescription() {
+        if(description == null)
+        {
+            return "-";
+        }
+        
         return description;
     }
 
@@ -81,5 +90,11 @@ public class User {
         this.description = description;
     }
     
-    
+    public boolean isIsSuperuser() {
+        return isSuperuser;
+    }
+
+    public void setIsSuperuser(boolean isSuperuser) {
+        this.isSuperuser = isSuperuser;
+    }
 }

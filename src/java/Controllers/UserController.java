@@ -5,11 +5,14 @@
  */
 package Controllers;
 
+import Common.Utils;
 import Models.Result;
 import Models.ResultOperationDB;
 import Models.User;
 import Repositories.UserRepository;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.text.Utilities;
 
 /**
  *
@@ -28,6 +31,42 @@ public class UserController {
     {
         Result Response = new Result();
         UserRepository Repository = new UserRepository();
+        
+        if(name.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(surname.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El apellido no puede ser vació.");
+            
+            return Response;
+        }
+        else if(username.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El usuario no puede ser vació.");
+            
+            return Response;
+        }
+        if(password.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("La contraseña no puede ser vacía.");
+            
+            return Response;
+        }
+        else if(!Utils.ValidateEmail(email))
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El email es inválido.");
+            
+            return Response;
+        }
         
         ResultOperationDB DBResult = Repository.Create(username, password, name, surname, email);
         
@@ -48,6 +87,28 @@ public class UserController {
     {
         Result Response = new Result();
         UserRepository Repository = new UserRepository();
+        
+        if(name.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        else if(surname.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El apellido no puede ser vació.");
+            
+            return Response;
+        }
+        else if(!Utils.ValidateEmail(email))
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El email es inválido.");
+            
+            return Response;
+        }
         
         ResultOperationDB DBResult = Repository.Update(username, email, name, surname, description);
         
@@ -91,4 +152,37 @@ public class UserController {
         return Repository.Get(username);
     }
     
+    public static ArrayList<User> Find(String username) throws SQLException
+    {
+        UserRepository Repository = new UserRepository();
+        
+        return Repository.Find(username);
+    }
+    
+    public static ArrayList<User> GetAll() throws SQLException
+    {
+        UserRepository Repository = new UserRepository();
+        
+        return Repository.GetAll();
+    }
+    
+    public static Result GrantSuperuser(int idUser) throws SQLException
+    {
+        Result Response = new Result();
+        UserRepository Repository = new UserRepository();
+        
+        ResultOperationDB DBResult = Repository.GrantSuperuser(idUser);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
+    }
 }

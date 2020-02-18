@@ -8,11 +8,13 @@ package Servlet;
 import Common.Utils;
 import Controllers.LanguageController;
 import Models.Lenguage;
+import Models.Result;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,9 +41,19 @@ public class CreateLenguage extends HttpServlet {
                 Len.setName(request.getParameter("name"));
                 Len.setPath(request.getParameter("path"));
 
-                LanguageController.Create(Len);
-
-                response.sendRedirect("./Vistas/lenguajes.jsp");
+                Result Res = LanguageController.Create(Len);
+                
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                    
+                    response.sendRedirect("./Vistas/create-lenguage.jsp");
+                }
+                else
+                {
+                    response.sendRedirect("./Vistas/lenguajes.jsp");
+                }
            }
            else
            {
@@ -49,7 +61,10 @@ public class CreateLenguage extends HttpServlet {
            } 
         }
         catch(Exception e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/lenguajes.jsp");
         }
     }
 

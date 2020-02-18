@@ -13,6 +13,7 @@
 <%
     HttpSession objSession = request.getSession();
     Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error"); 
     
     if(userSession == null) {
         response.sendRedirect("../index.jsp");
@@ -20,6 +21,11 @@
     }
     
     Project proj = ProjectController.Get(Integer.parseInt(request.getParameter("id")));
+    
+    if(proj == null)
+    {
+        error = "Tuvimos problemas para recuperar el proejcto.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -67,7 +73,14 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item">
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
@@ -79,6 +92,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item active">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -139,6 +153,7 @@
                   <h4 class="card-title">Modificar projecto</h4>
                 </div>
                 <div class="card-body">
+                  <% if(proj != null) {%>
                   <form action="../update-project" method="post">
                     <input name="code" type="hidden" value="<%= proj.getCode()%>" />
                     <div class="row">
@@ -161,7 +176,16 @@
                       </div>
                     </div>
                   </form>
+                  <%}%>
                 </div>
+                <br>
+                <%  objSession.removeAttribute("error");     
+                if(error != null && !error.isEmpty()) 
+                {%>
+                  <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                     <%=error %>
+                  </div>
+                <%}%> 
               </div>
             </div>
            </div>

@@ -7,12 +7,14 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.LibraryController;
+import Models.Result;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,7 +41,13 @@ public class UpdateLibrary extends HttpServlet {
                 String name = request.getParameter("name");
                 int id = Integer.parseInt(request.getParameter("id"));
 
-                LibraryController.Update(name, id);
+                Result Res = LibraryController.Update(name, id);
+                
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                }
 
                 response.sendRedirect("Vistas/update-library.jsp?id=" + id);    
            }
@@ -49,7 +57,10 @@ public class UpdateLibrary extends HttpServlet {
            }
         }
         catch(Exception e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/librerias.jsp");
         }
     }
 

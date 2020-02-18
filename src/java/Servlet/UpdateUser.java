@@ -61,7 +61,10 @@ public class UpdateUser extends HttpServlet {
            }
         }
         catch(IOException e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/update-user.jsp");
         }
 
     }

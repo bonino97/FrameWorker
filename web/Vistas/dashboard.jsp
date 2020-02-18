@@ -61,6 +61,13 @@
               <p>Usuario</p>
             </a>
           </li>
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
@@ -73,6 +80,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>

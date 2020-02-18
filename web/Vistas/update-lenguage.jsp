@@ -12,13 +12,19 @@
 <%
     HttpSession objSession = request.getSession();
     Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error"); 
     
-    if(userSession == null) {
+    if(userSession == null || !userSession.getLogedUser().isIsSuperuser()) {
         response.sendRedirect("../index.jsp");
         return;
     }
     
     Lenguage Len = LanguageController.Get(Integer.parseInt(request.getParameter("id")));
+    
+    if(Len == null)
+    {
+        error = "No pudimos recuperar el lenguaje";
+    }
 %>
 
 <!DOCTYPE html>
@@ -66,7 +72,14 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item active  ">
+         <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+         <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
@@ -78,6 +91,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -138,6 +152,7 @@
                   <h4 class="card-title">Modificar lenguaje</h4>
                 </div>
                 <div class="card-body">
+                  <%  if(Len != null) {%>
                   <form action="../update-lenguage" method="post">
                     <input name="id" type="hidden" value="<%= Len.getId()%>" />
                     <div class="row">
@@ -156,7 +171,16 @@
                       </div>
                     </div>
                   </form>
+                  <%}%>
                 </div>
+                <br>
+                <%  objSession.removeAttribute("error");     
+                if(error != null && !error.isEmpty()) 
+                {%>
+                  <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                     <%=error %>
+                  </div>
+                <%}%> 
               </div>
             </div>
            </div>

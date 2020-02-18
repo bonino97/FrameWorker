@@ -7,6 +7,7 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.LibraryProjectController;
+import Models.Result;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -35,18 +37,33 @@ public class DeleteLibraryProject extends HttpServlet {
             throws ServletException, IOException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         
-        if(Utils.isValidSession(request))
-        {
-            int idProj = Integer.parseInt(request.getParameter("idProj"));
-            int idLib = Integer.parseInt(request.getParameter("idLib"));
+        try {
+            if(Utils.isValidSession(request))
+            {
+                int idProj = Integer.parseInt(request.getParameter("idProj"));
+                int idLib = Integer.parseInt(request.getParameter("idLib"));
 
-            LibraryProjectController.Delete(idProj, idLib);
+                Result Res = LibraryProjectController.Delete(idProj, idLib);
 
-            response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                }
+
+                response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+            }
+            else
+            {
+                response.sendRedirect("index.jsp");
+            }
         }
-        else
+        catch(IOException | NumberFormatException | SQLException e)
         {
-            response.sendRedirect("index.jsp");
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/proyectos.jsp");
         }
     }
 

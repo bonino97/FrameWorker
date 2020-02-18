@@ -6,9 +6,13 @@
 package Servlet;
 
 import Common.Utils;
-import Controllers.LanguageController;
+import Controllers.UserController;
+import Models.Lenguage;
+import Models.Library;
 import Models.Result;
+import Models.Session;
 import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +21,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Juan Cruz
+ * @author usuario
  */
-public class UpdateLenguage extends HttpServlet {
+public class GrantSuperuser extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,21 +39,19 @@ public class UpdateLenguage extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         try {
-           if(Utils.isValidSession(request))
+            HttpSession objSession = request.getSession();
+            Session userSession = (Session)objSession.getAttribute("session"); 
+            
+           if(Utils.isValidSession(request) && userSession.getLogedUser().isIsSuperuser())
            {
-                String name = request.getParameter("name");
-                String path = request.getParameter("path");         
-                int id = Integer.parseInt(request.getParameter("id"));
-
-                Result Res = LanguageController.Update(name, path, id);
+                Result Res = UserController.GrantSuperuser(Integer.parseInt(request.getParameter("id")));
 
                 if(Res.getResult() == Result.Results.Error)
                 {
-                    HttpSession objSession = request.getSession();
                     objSession.setAttribute("error", Res.getMessage());
                 }
                 
-                response.sendRedirect("Vistas/update-lenguage.jsp?id=" + id);    
+                response.sendRedirect("./Vistas/users.jsp");
            }
            else
            {
@@ -60,8 +62,9 @@ public class UpdateLenguage extends HttpServlet {
             HttpSession objSession = request.getSession();
             objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
             
-            response.sendRedirect("./Vistas/lenguaje.jsp");
+            response.sendRedirect("./Vistas/users.jsp");
         }
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

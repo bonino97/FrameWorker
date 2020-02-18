@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class BaseRepository {
     private String USERNAME = "root";
     private String UNICODE = "useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
-    private String PASSWORD = "boni1997";
+    private String PASSWORD = "root1234";
     private String HOST = "localhost";
     private String PORT = "3306";
     private String DATABASE = "frameworker";

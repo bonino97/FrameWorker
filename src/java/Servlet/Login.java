@@ -10,6 +10,7 @@ import Models.Session;
 import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,8 +56,11 @@ public class Login extends HttpServlet {
                 response.sendRedirect("index.jsp");
             }
         }
-        catch(Exception e){
-            System.err.println("ERROR: "+e);
+        catch(IOException | SQLException e){
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("ndex.jsp");
         }
     }
 

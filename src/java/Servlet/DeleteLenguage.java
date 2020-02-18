@@ -7,6 +7,7 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.LanguageController;
+import Models.Result;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -37,15 +39,24 @@ public class DeleteLenguage extends HttpServlet {
         
         if(Utils.isValidSession(request))
         {
-             int id = Integer.parseInt(request.getParameter("id"));
+            int id = Integer.parseInt(request.getParameter("id"));
         
-            LanguageController.Delete(id);
+            Result Res = LanguageController.Delete(id);
+            
+           if(Res.getResult() == Result.Results.Error)
+           {
+               HttpSession objSession = request.getSession();
+               objSession.setAttribute("error", Res.getMessage());
+           }
         
             response.sendRedirect("./Vistas/lenguajes.jsp");
         }
         else
         {
-            response.sendRedirect("index.jsp");
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/lenguajes.jsp");
         }
     }
 

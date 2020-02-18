@@ -7,11 +7,14 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.LibraryProjectController;
+import Models.Result;
 import java.io.IOException;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -37,17 +40,30 @@ public class AddLibraryProject extends HttpServlet {
                 int idLen = Integer.parseInt(request.getParameter("idLen"));
                 int idProj = Integer.parseInt(request.getParameter("idProj"));
 
-                 LibraryProjectController.Add(idProj, idLen);
-
-                response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+                 Result Res = LibraryProjectController.Add(idProj, idLen);
+                 
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                    
+                    response.sendRedirect("./Vistas/add-library-project.jsp?code=" + idProj);
+                }
+                else
+                {
+                    response.sendRedirect("./Vistas/librerias-projecto.jsp?code=" + idProj);
+                }
            }
            else
            {
                response.sendRedirect("index.jsp");
            }
         }
-        catch(Exception e){
-            System.err.println("ERROR: "+e);
+        catch(IOException | NumberFormatException | SQLException e){
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/proyectos.jsp");
         }
     }
 

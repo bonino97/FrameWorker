@@ -32,8 +32,15 @@ public class LogoutUser extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        HttpSession objSession = request.getSession();  
-        objSession.removeAttribute("session");
+        try {
+            HttpSession objSession = request.getSession();  
+            objSession.removeAttribute("session");
+        }
+        catch(Exception e)
+        {
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+        }
         
         response.sendRedirect("index.jsp");
     }

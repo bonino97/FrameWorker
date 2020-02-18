@@ -7,11 +7,13 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.ProjectController;
+import Models.Result;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -38,8 +40,14 @@ public class UpdateProject extends HttpServlet {
                 String description = request.getParameter("description");
                 int code = Integer.parseInt(request.getParameter("code"));
 
-                ProjectController.Update(name, description, code);
+                Result Res = ProjectController.Update(name, description, code);
 
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    HttpSession objSession = request.getSession();
+                    objSession.setAttribute("error", Res.getMessage());
+                }
+                
                 response.sendRedirect("Vistas/update-project.jsp?id=" + code);
            }
            else
@@ -48,7 +56,10 @@ public class UpdateProject extends HttpServlet {
            }
         }
         catch(Exception e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/proyectos.jsp");
         }
     }
 

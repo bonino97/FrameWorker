@@ -160,7 +160,6 @@ public class ProjectRepository extends BaseRepository {
 
             pst = getConexion().prepareStatement(query);
             pst.setInt((1), idUsuario);
-
             rs = pst.executeQuery();
 
             while (rs.next()) {

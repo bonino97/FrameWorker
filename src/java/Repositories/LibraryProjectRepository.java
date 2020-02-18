@@ -107,12 +107,14 @@ public class LibraryProjectRepository extends BaseRepository {
         
         try
         {
+            
+            
             String query = "INSERT INTO proyectolibreria (idProyecto, idLibreria) VALUES(?, ?)";
             
             pst = getConexion().prepareStatement(query);
             pst.setInt((1), idProj);
             pst.setInt((2), idLib);
-
+            
             if(pst.executeUpdate() == 1)
             {
                 Response.setResult(ResultOperationDB.Results.OK);

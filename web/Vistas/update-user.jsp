@@ -19,6 +19,11 @@
     }
     
     User model = UserController.Get(userSession.getLogedUser().getUsername());
+    
+    if(model == null)
+    {
+        error = "Tuvimos problemas para recuperar tus datos.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -66,6 +71,13 @@
               <p>Usuario</p>
             </a>
           </li>
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
@@ -78,6 +90,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -138,6 +151,7 @@
                   <h4 class="card-title">Editar Perfil</h4>
                 </div>
                 <div class="card-body">
+                  <% if(model != null) {%>
                   <form action="../actualizar-usuario" method="post">
                     <div class="row">
                       <div class="col-md-6">
@@ -181,9 +195,11 @@
                     <input type="submit" class="btn btn-primary pull-right" value="Actualizar" href="./user.jsp"/>
                   </form>
                     <form action="../delete-user" method="post">
+                        <input type="hidden" name="isAdmin" value="false" />
                       <input type="hidden" name="id" value="<%= model.getId() %>" />
                       <input type="submit" class="btn btn-danger pull-left" value="Darme de Baja"/>
                     </form>
+                      <%}%> 
                   </div>
                   <br>
                   <%  objSession.removeAttribute("error");     

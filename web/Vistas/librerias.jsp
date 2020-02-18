@@ -12,13 +12,19 @@
 <%
     HttpSession objSession = request.getSession();
     Session userSession = (Session)objSession.getAttribute("session"); 
+    String error = (String)objSession.getAttribute("error"); 
     
-    if(userSession == null) {
+    if(userSession == null || !userSession.getLogedUser().isIsSuperuser()) {
         response.sendRedirect("../index.jsp");
         return;
     }
     
     ArrayList<Library> Libraries = LibraryController.GetAll();
+    
+    if(Libraries == null)
+    {
+        error = "No pudimos recuperar las librerias.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -66,18 +72,26 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item">
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
             </a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item ">
             <a class="nav-link" href="./librerias.jsp">
               <i class="material-icons">menu_book</i>
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -140,6 +154,7 @@
                         <th class="text-right">Acciones</th>
                     </tr>
                 </thead>
+                <% if(Libraries != null) {%>
                  <%  for(int i = 0; i < Libraries.size(); i++) {
                         Library Lib = (Library)Libraries.get(i);
                %>
@@ -161,7 +176,15 @@
                     </tr>
                 </tbody> 
                 <% } %>
+                <% } %>
             </table>
+            <%  objSession.removeAttribute("error");     
+                if(error != null && !error.isEmpty()) 
+            {%>
+              <div class="alert alert-danger" style="margin-right: 10px; margin-left: 10px" role="alert">
+                 <%=error %>
+              </div>
+            <%}%> 
         </div>
       </div>
     </div>

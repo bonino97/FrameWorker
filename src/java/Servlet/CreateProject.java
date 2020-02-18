@@ -9,6 +9,8 @@ import Common.Utils;
 import Controllers.ProjectController;
 import Models.Lenguage;
 import Models.Project;
+import Models.Result;
+import Models.Session;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,11 +49,20 @@ public class CreateProject extends HttpServlet {
                 proj.setLenguage(Len);
 
                 HttpSession objSession = request.getSession();
-                Integer userId = (Integer)objSession.getAttribute("userId"); 
+                Session session = (Session)objSession.getAttribute("session"); 
 
-                ProjectController.Create(proj, userId);
-
-                response.sendRedirect("./Vistas/proyectos.jsp");
+                Result Res = ProjectController.Create(proj, session.getLogedUser().getId());
+                
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    objSession.setAttribute("error", Res.getMessage());
+                    
+                    response.sendRedirect("./Vistas/create-project.jsp");
+                }
+                else
+                {
+                    response.sendRedirect("./Vistas/proyectos.jsp");
+                }
            }
            else
            {
@@ -59,7 +70,10 @@ public class CreateProject extends HttpServlet {
            }
         }
         catch(Exception e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/proyectos.jsp");
         }
     }
 

@@ -25,6 +25,15 @@
     Project Proj = ProjectController.Get(Integer.parseInt(request.getParameter("code")));
     
     ArrayList<Library> Libraries = LibraryController.GetAll(Proj);
+    
+    if(Libraries == null)
+    {
+        error = "No pudimos recuperar las librerias.";
+    }
+    else if(Proj == null)
+    {
+        error = "No pudimos recuperar el proyecto asociado.";
+    }
 %>
 
 <!DOCTYPE html>
@@ -72,7 +81,14 @@
               <p>Usuario</p>
             </a>
           </li>
-          <li class="nav-item">
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
+            <a class="nav-link" href="./users.jsp">
+              <i class="material-icons">group</i>
+              <p>Usuarios</p>
+            </a>
+          </li>
+          <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
@@ -84,6 +100,7 @@
               <p>Librerias</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item active">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -146,22 +163,30 @@
                 <div class="card-body">
                   <form action="../add-library-project" method="post">
                     <div class="row">
+                      <%  if(Proj != null && Libraries != null)  {%>
                       <div class="col-md-6">
                        <div>
                            <input type="hidden" name="idProj" value="<%= Proj.getCode()%>" />
-                            <select name="idLen" class="form-control">
-                                <%  for(int i = 0; i < Libraries.size(); i++) {
-                                    Library Lib = (Library)Libraries.get(i);
-                                %>
-                                <option value="<%= Lib.getId()%>"><%= Lib.getName()%></option>>
-                                <% } %>
-                            </select>
+                           <%  if(Libraries.size() == 0)  {%>
+                              <p style="margin-top: 10px;">No hay librerias disponibles para agregar.</p>
+                            <% } else  {%>
+                                <select name="idLen" class="form-control">
+                                    <%  for(int i = 0; i < Libraries.size(); i++) {
+                                        Library Lib = (Library)Libraries.get(i);
+                                    %>
+                                    <option value="<%= Lib.getId()%>"><%= Lib.getName()%></option>>
+                                    <% } %>
+                                </select>
+                            <%}%> 
                         </div>
                       </div>
-                        <div class="col-md-12">
-                          <input type="submit" class="btn btn-primary pull-right"  value="Agregar" />
-                      </div>
+                        <%  if(Libraries.size() != 0)  {%>
+                              <div class="col-md-12">
+                                <input type="submit" class="btn btn-primary pull-right"  value="Agregar" />
+                              </div>
+                        <% }%>
                     </div>
+                    <%}%> 
                   </form>
                 </div>
                 <br>
@@ -172,7 +197,6 @@
                        <%=error %>
                     </div>
                   <%}%> 
-                  </c:if>
               </div>
             </div>
            </div>

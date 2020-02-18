@@ -10,6 +10,7 @@ import Models.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -141,7 +142,7 @@ public class UserRepository extends BaseRepository {
             
             rs = pst.executeQuery();
             
-            Response = new User(rs);
+            Response = new User(rs, false);
             
             return Response;
         }
@@ -159,6 +160,44 @@ public class UserRepository extends BaseRepository {
         }
     } 
     
+     public ArrayList<User> GetAll() throws SQLException
+     {
+        LanguageRepository LanRepository = null;
+        ArrayList<User> Response = new ArrayList<>();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try
+        {
+            String query = "SELECT * FROM usuario";
+        
+            pst = getConexion().prepareStatement(query);        
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                User user = new User(rs, true);;                
+
+                Response.add(user);
+            }
+
+            return Response;
+        }
+        catch(SQLException e){
+            return null;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
+    }
+ 
+    
     public ResultOperationDB Delete(int id) throws SQLException
     {
         ResultOperationDB Response = new ResultOperationDB();
@@ -170,7 +209,15 @@ public class UserRepository extends BaseRepository {
             pst = getConexion().prepareStatement(query);
             pst.setInt((1), id);
 
-            pst.executeUpdate();
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error eliminando el usuario, por favor, reintente.");
+            }
         }
         catch(SQLException e){
             Response.setResult(ResultOperationDB.Results.Error);
@@ -187,8 +234,81 @@ public class UserRepository extends BaseRepository {
         }
         
         return Response;
+    }
+    
+    public ResultOperationDB GrantSuperuser(int idUser) throws SQLException{
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst  = null;
         
+        try{ 
+            String query = "UPDATE usuario SET isSuperuser = 1 WHERE id = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), idUser);
+            
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+        }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
         
+        return Response;
+    }
+    
+    public ArrayList<User> Find(String username) throws SQLException
+     {
+        LanguageRepository LanRepository = null;
+        ArrayList<User> Response = new ArrayList<>();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        
+        try
+        {
+            String query = "SELECT * FROM usuario where username like ?";
+        
+            pst = getConexion().prepareStatement(query);        
+            pst.setString((1), "%" + username + "%");
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                User user = new User(rs, true);;                
+
+                Response.add(user);
+            }
+
+            return Response;
+        }
+        catch(SQLException e){
+            return null;
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+            if(rs != null) rs.close();
+        }
     }
     
 }

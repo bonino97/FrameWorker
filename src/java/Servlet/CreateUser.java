@@ -7,12 +7,14 @@ package Servlet;
 
 import Common.Utils;
 import Controllers.UserController;
+import Models.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -34,17 +36,20 @@ public class CreateUser extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            if(Utils.isValidSession(request))
+           String username = request.getParameter("username");
+           String name = request.getParameter("name");
+           String surname = request.getParameter("surname");
+           String password = request.getParameter("password");
+           String email = request.getParameter("email");
+
+           Result Res = UserController.Create(username, password, name, surname, email);
+
+           if(Res.getResult() == Result.Results.Error)
            {
-                String username = request.getParameter("username");
-                String name = request.getParameter("name");
-                String surname = request.getParameter("surname");
-                String password = request.getParameter("password");
-                String email = request.getParameter("email");
+               HttpSession objSession = request.getSession();
+               objSession.setAttribute("error", Res.getMessage());
 
-                UserController.Create(username, password, name, surname, email);
-
-                response.sendRedirect("index.jsp");
+               response.sendRedirect("./Vistas/register.jsp");
            }
            else
            {
@@ -52,7 +57,10 @@ public class CreateUser extends HttpServlet {
            }
         }
         catch(Exception e){
-            System.err.println("ERROR: "+e);
+            HttpSession objSession = request.getSession();
+            objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
+            
+            response.sendRedirect("./Vistas/register.jsp");
         }
     }
 

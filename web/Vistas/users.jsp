@@ -4,28 +4,35 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.User"%>
 <%@page import="Models.Session"%>
-<%@page import="Controllers.ProjectController"%>
-<%@page import="Models.Project"%>
-<%@page import="Models.Library"%>
+<%@page import="Controllers.UserController"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="Models.Lenguage"%>
 <%
     HttpSession objSession = request.getSession();
     Session userSession = (Session)objSession.getAttribute("session"); 
     String error = (String)objSession.getAttribute("error"); 
+    String username = request.getParameter("username");
     
-    if(userSession == null) {
+    if(userSession == null || !userSession.getLogedUser().isIsSuperuser()) {
         response.sendRedirect("../index.jsp");
         return;
     }
     
-    Project Proj = ProjectController.Get(Integer.parseInt(request.getParameter("code")));
-    
-    if(Proj == null)
+    ArrayList<User> Users = null;
+    if(username != null && !username.isEmpty())
     {
-        error = "Hubo un error recuperando el projecto.";
+        Users = UserController.Find(username);
+    }
+    else
+    {
+        Users = UserController.GetAll();
+    }
+    
+    if(Users == null)
+    {
+        error = "No pudimos recuperar los usuarios.";
     }
 %>
 
@@ -74,13 +81,12 @@
               <p>Usuario</p>
             </a>
           </li>
-         <% if(userSession.getLogedUser().isIsSuperuser()) {%>
-         <li class="nav-item ">
+          <% if(userSession.getLogedUser().isIsSuperuser()) {%>
+          <li class="nav-item ">
             <a class="nav-link" href="./users.jsp">
               <i class="material-icons">group</i>
               <p>Usuarios</p>
             </a>
-          </li>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
@@ -94,7 +100,7 @@
             </a>
           </li>
           <%}%>
-          <li class="nav-item active">
+          <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
               <p>Proyectos</p>
@@ -147,28 +153,43 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="container">
-            <div>
-                <h3 class="pull-left">Projecto: <%= Proj.getName()%></h3>   
-                <a href="/FrameWorker/Vistas/add-library-project.jsp?code=<%= Proj.getCode()%>" class="btn btn-info pull-right">Agregar libreria</a>    
-            </div>
+            <form action="./users.jsp" method="get">
+          <div class="input-group no-border" style="margin-bottom: 30px; width: 40%;"> 
+                <input name="username" type="text" value="" class="form-control" placeholder="Buscar...">
+           </div>
+           </form>
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Usuario</th>
                         <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Descripcion</th>
                         <th class="text-right">Acciones</th>
                     </tr>
                 </thead>
-                <% if(Proj != null) {%>
-                 <%  for(int i = 0; i < Proj.getLibraries().size(); i++) {
-                        Library Lib = (Library)Proj.getLibraries().get(i);
-                %>
+                <% if(Users != null) {%>
+                 <%  for(int i = 0; i < Users.size(); i++) {
+                        User user = (User)Users.get(i);
+               %>
                 <tbody>
                     <tr>
-                        <td><%= Lib.getName() %></td>
+                        <td><%= user.getUsername() %></td>
+                        <td><%= user.getName()%></td>
+                        <td><%= user.getSurname()%></td>
+                        <td><%= user.getDescription()%></td>
                         <td class="td-actions text-right">
-                             <form style="display: inline-block" action="../delete-library-project" method="post">
-                                <input type="hidden" name="idLib" value="<%= Lib.getId()%>" />
-                                <input type="hidden" name="idProj" value="<%= Proj.getCode() %>" />
+                            <% if(!user.isIsSuperuser()) {%>
+                            <form style="display: inline-block" action="../grantsuperuser" method="post">
+                                <input type="hidden" name="id" value="<%= user.getId()%>" />
+                                <button type="submit" rel="tooltip" class="btn btn-success">
+                                   <i class="material-icons">supervisor_account</i>
+                               </button>
+                             </form>
+                            <%}%>
+                             <form style="display: inline-block" action="../delete-user" method="post">
+                                <input type="hidden" name="isAdmin" value="true" />
+                                <input type="hidden" name="id" value="<%= user.getId()%>" />
                                 <button type="submit" rel="tooltip" class="btn btn-danger">
                                    <i class="material-icons">close</i>
                                </button>

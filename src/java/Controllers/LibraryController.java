@@ -46,6 +46,14 @@ public class LibraryController {
         
         LibraryRepository Repository = new LibraryRepository();
         
+        if(Lib.getName().isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
+        
         ResultOperationDB DBResult = Repository.Create(Lib);
         
         if(DBResult.getResult() == ResultOperationDB.Results.OK)
@@ -66,6 +74,14 @@ public class LibraryController {
         Result Response = new Result();
         
         LibraryRepository Repository = new LibraryRepository();
+        
+        if(name.isEmpty())
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage("El nombre no puede ser vació.");
+            
+            return Response;
+        }
         
         ResultOperationDB DBResult = Repository.Update(name, id);
         

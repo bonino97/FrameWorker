@@ -64,6 +64,10 @@
         <servlet-name>LogoutUser</servlet-name>
         <servlet-class>Servlet.LogoutUser</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GrantSuperuser</servlet-name>
+        <servlet-class>Servlet.GrantSuperuser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IniciarSesion</servlet-name>
         <url-pattern>/iniciar</url-pattern>
@@ -128,9 +132,13 @@
         <servlet-name>LogoutUser</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GrantSuperuser</servlet-name>
+        <url-pattern>/grantsuperuser</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
-            30
+            1800
         </session-timeout>
     </session-config>
 </web-app>

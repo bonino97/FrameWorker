@@ -4,7 +4,12 @@
     Author     : bonii
 --%>
 
+<%@page import="Models.Session"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    HttpSession objSession = request.getSession();
+    String error = (String)objSession.getAttribute("error");  
+%>
 <!DOCTYPE html>
   <html>
     <head>
@@ -50,6 +55,20 @@
                   <label for="email">Email</label>
                 </div>
               </div>
+              <%
+                    objSession.removeAttribute("error");     
+                    if(error != null)  {
+                %> 
+                <div class="row">
+                    <div id="card-alert" class="card red col s6">
+                      <div class="card-content white-text">
+                        <p><%= error %></p>
+                      </div>
+                    </div>
+                </div>
+                <%
+                    }
+                %>
               <div class="row">
                 <input type="submit" value="Registrate" class="waves-effect waves-light btn">
                 <a type="submit" class="waves-effect waves-light btn right" href="../index.jsp">Cancelar</a>
