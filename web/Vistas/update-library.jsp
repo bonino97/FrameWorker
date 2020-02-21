@@ -60,12 +60,6 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="./dashboard.jsp">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
-          </li>
           <% if(userSession.getLogedUser().isIsSuperuser()) {%>
           <li class="nav-item ">
             <a class="nav-link" href="./users.jsp">
@@ -73,26 +67,20 @@
               <p>Usuarios</p>
             </a>
           </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
               <p>Lenguajes</p>
             </a>
           </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./librerias.jsp">
-              <i class="material-icons">menu_book</i>
-              <p>Librerias</p>
-            </a>
-          </li>
-          <%}%>
           <li class="nav-item active">
             <a class="nav-link" href="./librerias.jsp">
               <i class="material-icons">menu_book</i>
               <p>Librerias</p>
             </a>
           </li>
-          <li class="nav-item ">
+          <li class="nav-item">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
               <p>Proyectos</p>
@@ -132,8 +120,8 @@
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="./user.jsp">Perfil</a>
-                  <a class="dropdown-item" href="./user.jsp">Ajustes</a>
+                  <a class="dropdown-item" href="./update-user.jsp">Perfil</a>
+                  <a class="dropdown-item" href="./update-user.jsp">Ajustes</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="../logout">Cerrar Sesion</a>
                 </div>

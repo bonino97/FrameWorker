@@ -13,6 +13,7 @@ import Models.Result;
 import Models.Session;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +59,7 @@ public class GrantSuperuser extends HttpServlet {
                response.sendRedirect("index.jsp");
            }   
         }
-        catch(Exception e){
+        catch(IOException | NumberFormatException | SQLException e){
             HttpSession objSession = request.getSession();
             objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
             

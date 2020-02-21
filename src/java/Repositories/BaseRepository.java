@@ -16,12 +16,12 @@ import java.sql.SQLException;
 public class BaseRepository {
     private String USERNAME = "root";
     private String UNICODE = "useSSL=false&autoReconnect=true&useUnicode=yes&characterEncoding=UTF-8";
-    private String PASSWORD = "root1234";
-    private String HOST = "localhost";
-    private String PORT = "3306";
+    private String PASSWORD = "2ip9E6qzPj";
+    private String HOST = "192.168.3.113";
+    private String PORT = "33060";
     private String DATABASE = "frameworker";
     private String CLASSNAME = "com.mysql.jdbc.Driver";
-    private String URL = "jdbc:mysql://"+HOST+":"+PORT+"/"+DATABASE+"?"+UNICODE;
+    private String URL = "jdbc:mysql://node52218-frameworker.jl.serv.net.mx/"+DATABASE+"?"+UNICODE;
     private Connection con;
     
     public BaseRepository()

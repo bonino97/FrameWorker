@@ -69,24 +69,14 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="./dashboard.jsp">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./update-user.jsp">
-              <i class="material-icons">person</i>
-              <p>Usuario</p>
-            </a>
-          </li>
           <% if(userSession.getLogedUser().isIsSuperuser()) {%>
-          <li class="nav-item ">
+          <li class="nav-item active">
             <a class="nav-link" href="./users.jsp">
               <i class="material-icons">group</i>
               <p>Usuarios</p>
             </a>
+          </li>
+          <%}%>
           <li class="nav-item ">
             <a class="nav-link" href="./lenguajes.jsp">
               <i class="material-icons">content_paste</i>
@@ -99,7 +89,7 @@
               <p>Librerias</p>
             </a>
           </li>
-          <%}%>
+          
           <li class="nav-item ">
             <a class="nav-link" href="./proyectos.jsp">
               <i class="material-icons">library_books</i>
@@ -140,8 +130,8 @@
                   </p>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="./user.jsp">Perfil</a>
-                  <a class="dropdown-item" href="./user.jsp">Ajustes</a>
+                  <a class="dropdown-item" href="./update-user.jsp">Perfil</a>
+                  <a class="dropdown-item" href="./update-user.jsp">Ajustes</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="../logout">Cerrar Sesion</a>
                 </div>
@@ -183,6 +173,13 @@
                             <form style="display: inline-block" action="../grantsuperuser" method="post">
                                 <input type="hidden" name="id" value="<%= user.getId()%>" />
                                 <button type="submit" rel="tooltip" class="btn btn-success">
+                                   <i class="material-icons">supervisor_account</i>
+                               </button>
+                             </form>
+                            <%} else {%>
+                             <form style="display: inline-block" action="../removesuperuser" method="post">
+                                <input type="hidden" name="id" value="<%= user.getId()%>" />
+                                <button type="submit" rel="tooltip" class="btn btn-danger">
                                    <i class="material-icons">supervisor_account</i>
                                </button>
                              </form>

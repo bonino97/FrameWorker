@@ -5,13 +5,13 @@
  */
 package Servlet;
 
+import Common.Utils;
 import Controllers.UserController;
+import Models.Result;
 import Models.Session;
-import Models.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,9 +20,9 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author bonii
+ * @author usuario
  */
-public class Login extends HttpServlet {
+public class RemoveSuperuser extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,32 +35,32 @@ public class Login extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            response.setContentType("text/html;charset=UTF-8");
-        
-        try{
-            String username = request.getParameter("userName");
-            String password = request.getParameter("password");
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            HttpSession objSession = request.getSession();
+            Session userSession = (Session)objSession.getAttribute("session"); 
+            
+           if(Utils.isValidSession(request) && userSession.getLogedUser().isIsSuperuser())
+           {
+                Result Res = UserController.RemoveSuperuser(Integer.parseInt(request.getParameter("id")));
 
-            if(UserController.Auth(username, password)){
-                Session session = new Session();
-                session.setLogedUser(UserController.Get(username));
+                if(Res.getResult() == Result.Results.Error)
+                {
+                    objSession.setAttribute("error", Res.getMessage());
+                }
                 
-                HttpSession objSession = request.getSession();
-                objSession.setAttribute("session", session);
-                
-                response.sendRedirect("Vistas/proyectos.jsp");
-            }
-            else {
-                HttpSession objSession = request.getSession();
-                objSession.setAttribute("error", "Usuario o clave incorrecto");
-                response.sendRedirect("index.jsp");
-            }
+                response.sendRedirect("./Vistas/users.jsp");
+           }
+           else
+           {
+               response.sendRedirect("index.jsp");
+           }   
         }
-        catch(IOException | SQLException e){
+        catch(IOException | NumberFormatException | SQLException e){
             HttpSession objSession = request.getSession();
             objSession.setAttribute("error", "Ocurrio un error, por favor, comuniquese con el administrador.");
             
-            response.sendRedirect("ndex.jsp");
+            response.sendRedirect("./Vistas/users.jsp");
         }
     }
 

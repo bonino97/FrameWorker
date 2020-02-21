@@ -68,6 +68,10 @@
         <servlet-name>GrantSuperuser</servlet-name>
         <servlet-class>Servlet.GrantSuperuser</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveSuperuser</servlet-name>
+        <servlet-class>Servlet.RemoveSuperuser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>IniciarSesion</servlet-name>
         <url-pattern>/iniciar</url-pattern>
@@ -135,6 +139,10 @@
     <servlet-mapping>
         <servlet-name>GrantSuperuser</servlet-name>
         <url-pattern>/grantsuperuser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveSuperuser</servlet-name>
+        <url-pattern>/removesuperuser</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

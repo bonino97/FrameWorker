@@ -185,4 +185,24 @@ public class UserController {
         
         return Response;
     }
+    
+    public static Result RemoveSuperuser(int idUser) throws SQLException
+    {
+        Result Response = new Result();
+        UserRepository Repository = new UserRepository();
+        
+        ResultOperationDB DBResult = Repository.RemoveSuperuser(idUser);
+        
+        if(DBResult.getResult() == ResultOperationDB.Results.OK)
+        {
+            Response.setResult(Result.Results.OK);
+        }
+        else
+        {
+            Response.setResult(Result.Results.Error);
+            Response.setMessage(DBResult.getMessage());
+        }
+        
+        return Response;
+    }
 }

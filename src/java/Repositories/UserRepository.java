@@ -273,6 +273,43 @@ public class UserRepository extends BaseRepository {
         return Response;
     }
     
+    public ResultOperationDB RemoveSuperuser(int idUser) throws SQLException{
+        ResultOperationDB Response = new ResultOperationDB();
+        PreparedStatement pst  = null;
+        
+        try{ 
+            String query = "UPDATE usuario SET isSuperuser = 0 WHERE id = ?";
+            
+            pst = getConexion().prepareStatement(query);
+            pst.setInt((1), idUser);
+            
+            if(pst.executeUpdate() == 1)
+            {
+                Response.setResult(ResultOperationDB.Results.OK);
+            }
+            else
+            {
+                Response.setResult(ResultOperationDB.Results.Error);
+                Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+            }
+        }
+        catch(SQLException e){
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+        }
+        catch(Exception e)
+        {
+            Response.setResult(ResultOperationDB.Results.Error);
+            Response.setMessage("Hubo un error concediendo los permisos, por favor, reintente.");
+        }
+        finally {
+            if(getConexion() != null) getConexion().close();
+            if(pst != null) pst.close();
+        }
+        
+        return Response;
+    }
+    
     public ArrayList<User> Find(String username) throws SQLException
      {
         LanguageRepository LanRepository = null;
